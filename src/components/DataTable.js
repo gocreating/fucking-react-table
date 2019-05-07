@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import styled, { css } from 'styled-components'
 
 const Wrapper = styled.div`
@@ -47,15 +47,20 @@ const Td = styled.td`
   `}
 `
 
-const DataTable = ({ children }) => (
-  <Wrapper>
-    <Scroller>
-      <Table>
-        {children}
-      </Table>
-    </Scroller>
-  </Wrapper>
-)
+class DataTable extends Component {
+  render() {
+    const { children } = this.props
+    return (
+      <Wrapper>
+        <Scroller>
+          <Table>
+            {children}
+          </Table>
+        </Scroller>
+      </Wrapper>
+    )
+  }
+}
 
 DataTable.THead = THead
 DataTable.TBody = TBody
