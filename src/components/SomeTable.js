@@ -57,8 +57,11 @@ const data = Array(20).fill(0).map((val, rowIndex) => ({
 }))
 
 const SomeTable = () => (
-  <DataTable>
-    <DataTable.THead>
+  <DataTable
+    data={data}
+    headerRowHeight={44}
+    rowHeight={62}
+    renderHeader={() => (
       <DataTable.Tr>
         {columns.map(column => (
           <DataTable.Th
@@ -69,22 +72,20 @@ const SomeTable = () => (
           </DataTable.Th>
         ))}
       </DataTable.Tr>
-    </DataTable.THead>
-    <DataTable.TBody>
-      {data.map(record => (
-        <DataTable.Tr key={record.id}>
-          {columns.map(column => (
-            <DataTable.Td
-              key={`row-${record.id}-col-${column.key}`}
-              cellWidth={column.width}
-            >
-              {record[column.key]}
-            </DataTable.Td>
-          ))}
-        </DataTable.Tr>
-      ))}
-    </DataTable.TBody>
-  </DataTable>
+    )}
+    renderRow={record => (
+      <DataTable.Tr key={record.id}>
+        {columns.map(column => (
+          <DataTable.Td
+            key={`row-${record.id}-col-${column.key}`}
+            cellWidth={column.width}
+          >
+            {record[column.key]}
+          </DataTable.Td>
+        ))}
+      </DataTable.Tr>
+    )}
+  />
 )
 
 export default SomeTable
