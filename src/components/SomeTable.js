@@ -59,6 +59,7 @@ const data = Array(20).fill(0).map((val, rowIndex) => ({
 const SomeTable = () => (
   <DataTable
     data={data}
+    preRenderRowCount={5}
     headerRowHeight={44}
     rowHeight={62}
     renderHeader={() => (

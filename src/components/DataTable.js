@@ -147,17 +147,18 @@ class DataTable extends Component {
   }
 
   _handleWindowScroll = () => {
-    const { headerRowHeight, rowHeight, data } = this.props
+    const { preRenderRowCount, headerRowHeight, rowHeight, data } = this.props
     const { windowHeight } = this.state
     const rectWrapper = this.wrapper.current.getBoundingClientRect()
-    const tbodyTop = rectWrapper.top + headerRowHeight
-    const tbodyBottom = rectWrapper.top + headerRowHeight + rowHeight * data.length
+    const margin = preRenderRowCount * rowHeight
+    const tbodyTop = rectWrapper.top + headerRowHeight + margin
+    const tbodyBottom = rectWrapper.top + headerRowHeight + rowHeight * data.length - margin
     let renderFromIndex
     let renderToIndex
     
     if (tbodyTop > 0) {
       renderFromIndex = 0
-    } else if (tbodyTop < 0 && tbodyBottom > 0) {
+    } else if (tbodyTop <= 0 && 0 < tbodyBottom) {
       renderFromIndex = Math.floor(-tbodyTop / rowHeight)
     } else {
       renderFromIndex = data.length - 1
@@ -209,6 +210,7 @@ class DataTable extends Component {
 
 DataTable.propTypes = {
   data: PropTypes.array,
+  preRenderRowCount: PropTypes.number,
   headerRowHeight: PropTypes.number.isRequired,
   rowHeight: PropTypes.number.isRequired,
   renderHeader: PropTypes.func,
@@ -219,6 +221,12 @@ DataTable.childContextTypes = {
   headerRowHeight: PropTypes.number,
   rowHeight: PropTypes.number,
 };
+
+DataTable.defaultProps = {
+  preRenderRowCount: 0,
+  renderHeader: () => {},
+  renderRow: () => {},
+}
 
 /**
  * Exposed Components
