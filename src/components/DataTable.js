@@ -185,10 +185,8 @@ class DataTable extends Component {
       <Wrapper ref={this.wrapper}>
         <Scroller>
           <Table>
-            <DataTable.THead>
-              {renderHeader()}
-            </DataTable.THead>
             <DataTable.TBody>
+              {renderHeader()}
               {renderFromIndex > 0 && (
                 <Tr height={rowHeight * renderFromIndex} />
               )}
