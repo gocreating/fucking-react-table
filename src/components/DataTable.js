@@ -16,7 +16,9 @@ const Wrapper = styled.div`
 const Scroller = styled.div`
   overflow-x: auto;
   overflow-y: visible;
-  width: 100%;
+  max-width: 100%;
+  float: left;
+  width: auto;
   ${({ maxHeight }) => maxHeight && css`
     max-height: ${maxHeight}px;
   `}
