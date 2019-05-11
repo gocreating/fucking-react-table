@@ -17,12 +17,19 @@ const Scroller = styled.div`
   overflow-x: auto;
   overflow-y: visible;
   width: 100%;
+  ${({ maxHeight }) => maxHeight && css`
+    max-height: ${maxHeight}px;
+  `}
 `
+
+Scroller.propTypes = {
+  maxHeight: PropTypes.number,
+}
 
 /**
  * Table
  */
-const Table = styled.table`
+const StyledTable = styled.table`
   border-collapse: collapse;
   background-color: #26282b;
 `
@@ -108,10 +115,8 @@ Td.contextTypes = {
  */
 class DataTable extends Component {
   constructor(props) {
-    super(props);
-    this.wrapper = React.createRef()
-    this.handleWindowResize = throttle(this._handleWindowResize, 200)
-    this.handleWindowScroll = throttle(this._handleWindowScroll, 200)
+    super(props)
+    this.scroller = React.createRef()    
     this.state = {
       windowHeight: 0,
       renderFromIndex: 0,
@@ -128,46 +133,95 @@ class DataTable extends Component {
   }
 
   componentDidMount() {
+    this.addListeners()
+  }
+
+  componentDidUpdate(prevProps) {
+    const { maxHeight, throttleWait } = this.props
+    const prevMaxHeight = prevProps.maxHeight
+    const prevThrottleWait = prevProps.throttleWait
+    if (
+      maxHeight !== prevMaxHeight ||
+      throttleWait !== prevThrottleWait
+    ) {
+      this.removeListeners()
+      this.addListeners()
+    }
+  }
+
+  componentWillUnmount() {
+    this.removeListeners()
+  }
+
+  addListeners = () => {
+    const { maxHeight, throttleWait } = this.props
+    this.handleWindowResize = throttle(this._handleWindowResize, throttleWait)
+    this.handleWindowScroll = throttle(this._handleWindowScroll, throttleWait)
     this.handleWindowResize()
     this.handleWindowScroll()
     window.addEventListener('resize', this.handleWindowResize)
-    window.addEventListener('scroll', this.handleWindowScroll)
+    if (maxHeight > 0) {
+      this.scroller.current.addEventListener('scroll', this.handleWindowScroll)
+    } else {
+      window.addEventListener('scroll', this.handleWindowScroll)
+    }
   }
 
-  componentWillMount() {
+  removeListeners = () => {
+    const { maxHeight } = this.props
     window.removeEventListener('resize', this.handleWindowResize)
-    window.removeEventListener('scroll', this.handleWindowScroll)
+    if (maxHeight > 0) {
+      this.scroller.current.removeEventListener('scroll', this.handleWindowScroll)
+    } else {
+      window.removeEventListener('scroll', this.handleWindowScroll)
+    }
   }
 
   _handleWindowResize = () => {
-    const windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+    const { maxHeight } = this.props
+    let windowHeight
+    if (maxHeight > 0) {
+      windowHeight = maxHeight
+    } else {
+      windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+    }
     this.setState({ windowHeight }, () => {
       this.handleWindowScroll()
     })
   }
 
   _handleWindowScroll = () => {
-    const { preRenderRowCount, headerRowHeight, rowHeight, data } = this.props
+    const { maxHeight, preRenderRowCount, headerRowHeight, rowHeight, data } = this.props
     const { windowHeight } = this.state
-    const rectWrapper = this.wrapper.current.getBoundingClientRect()
-    const margin = preRenderRowCount * rowHeight
-    const tbodyTop = rectWrapper.top + headerRowHeight + margin
-    const tbodyBottom = rectWrapper.top + headerRowHeight + rowHeight * data.length - margin
+    const rectScroller = this.scroller.current.getBoundingClientRect()
+    const detectMargin = preRenderRowCount * rowHeight
+    const tbodyHeight = rowHeight * data.length
+    let tbodyTopY
+    let tbodyBottomY
     let renderFromIndex
     let renderToIndex
-    
-    if (tbodyTop > 0) {
+
+    if (maxHeight > 0) {
+      tbodyTopY = -this.scroller.current.scrollTop + headerRowHeight + detectMargin
+      tbodyBottomY = -this.scroller.current.scrollTop + headerRowHeight + tbodyHeight - detectMargin
+    } else {
+      tbodyTopY = rectScroller.top + headerRowHeight + detectMargin
+      tbodyBottomY = rectScroller.top + headerRowHeight + tbodyHeight - detectMargin
+    }    
+
+    if (tbodyTopY >= 0) {
       renderFromIndex = 0
-    } else if (tbodyTop <= 0 && 0 < tbodyBottom) {
-      renderFromIndex = Math.floor(-tbodyTop / rowHeight)
+    } else if (tbodyTopY < 0 && 0 < tbodyBottomY) {
+      renderFromIndex = Math.floor(-tbodyTopY / rowHeight)
     } else {
       renderFromIndex = data.length - 1
     }
-    if (tbodyBottom - windowHeight > 0) {
-      renderToIndex = data.length - 1 - Math.floor((tbodyBottom - windowHeight) / rowHeight)
+    if (tbodyBottomY - windowHeight >= 0) {
+      renderToIndex = data.length - 1 - Math.floor((tbodyBottomY - windowHeight) / rowHeight)
     } else {
       renderToIndex = data.length - 1
     }
+    console.info(`from ${renderFromIndex} to ${renderToIndex}`)
     this.setState({
       renderFromIndex,
       renderToIndex,
@@ -175,7 +229,7 @@ class DataTable extends Component {
   }
 
   render() {
-    const { data, rowHeight, renderHeader, renderRow } = this.props
+    const { data, maxHeight, rowHeight, renderHeader, renderRow } = this.props
     const { renderFromIndex, renderToIndex } = this.state
     const renderedLength = (
       renderToIndex > renderFromIndex ?
@@ -183,9 +237,12 @@ class DataTable extends Component {
       1
     )
     return (
-      <Wrapper ref={this.wrapper}>
-        <Scroller>
-          <Table>
+      <Wrapper>
+        <Scroller
+          ref={this.scroller}
+          maxHeight={maxHeight > 0 ? maxHeight : undefined}
+        >
+          <StyledTable>
             <DataTable.TBody>
               {renderHeader()}
               {renderFromIndex > 0 && (
@@ -201,7 +258,7 @@ class DataTable extends Component {
                 <Tr height={rowHeight * (data.length - renderToIndex)} />
               )}
             </DataTable.TBody>
-          </Table>
+          </StyledTable>
         </Scroller>
       </Wrapper>
     )
@@ -209,10 +266,12 @@ class DataTable extends Component {
 }
 
 DataTable.propTypes = {
-  data: PropTypes.array,
-  preRenderRowCount: PropTypes.number,
+  data: PropTypes.array.isRequired,
   headerRowHeight: PropTypes.number.isRequired,
   rowHeight: PropTypes.number.isRequired,
+  maxHeight: PropTypes.number,
+  throttleWait: PropTypes.number,
+  preRenderRowCount: PropTypes.number,
   renderHeader: PropTypes.func,
   renderRow: PropTypes.func,
 }
@@ -220,9 +279,11 @@ DataTable.propTypes = {
 DataTable.childContextTypes = {
   headerRowHeight: PropTypes.number,
   rowHeight: PropTypes.number,
-};
+}
 
 DataTable.defaultProps = {
+  maxHeight: -1,
+  throttleWait: 200,
   preRenderRowCount: 0,
   renderHeader: () => {},
   renderRow: () => {},

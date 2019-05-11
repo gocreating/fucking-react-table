@@ -47,7 +47,7 @@ const columns = [{
   width: 100,
 }]
 
-const data = Array(20).fill(0).map((val, rowIndex) => ({
+const data = Array(200).fill(0).map((val, rowIndex) => ({
   id: `row-id-${rowIndex}`,
   width: (rowIndex + 1) * 10,
   ...columns.reduce((obj, column, columnIndex) => ({
@@ -56,12 +56,14 @@ const data = Array(20).fill(0).map((val, rowIndex) => ({
   }), {}),
 }))
 
-const SomeTable = () => (
+const SomeTable = ({ maxHeight, throttleWait, preRenderRowCount }) => (
   <DataTable
     data={data}
-    preRenderRowCount={5}
+    maxHeight={maxHeight}
+    throttleWait={throttleWait}
+    preRenderRowCount={preRenderRowCount}
     headerRowHeight={44}
-    rowHeight={62}
+    rowHeight={62}    
     renderHeader={() => (
       <DataTable.Tr>
         {columns.map(column => (
