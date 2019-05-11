@@ -118,7 +118,7 @@ class DataTable extends Component {
     super(props)
     this.scroller = React.createRef()    
     this.state = {
-      windowHeight: 0,
+      scrollerHeight: 0,
       renderFromIndex: 0,
       renderToIndex: 0,
     }
@@ -153,46 +153,50 @@ class DataTable extends Component {
     this.removeListeners()
   }
 
+  isAutoHeight = (props) => {
+    const { maxHeight } = (props || this.props)
+    return maxHeight < 0
+  }
+
   addListeners = () => {
-    const { maxHeight, throttleWait } = this.props
+    const { throttleWait } = this.props
     this.handleWindowResize = throttle(this._handleWindowResize, throttleWait)
     this.handleWindowScroll = throttle(this._handleWindowScroll, throttleWait)
     this.handleWindowResize()
     this.handleWindowScroll()
     window.addEventListener('resize', this.handleWindowResize)
-    if (maxHeight > 0) {
-      this.scroller.current.addEventListener('scroll', this.handleWindowScroll)
-    } else {
+    if (this.isAutoHeight()) {
       window.addEventListener('scroll', this.handleWindowScroll)
+    } else {
+      this.scroller.current.addEventListener('scroll', this.handleWindowScroll)
     }
   }
 
   removeListeners = () => {
-    const { maxHeight } = this.props
     window.removeEventListener('resize', this.handleWindowResize)
-    if (maxHeight > 0) {
-      this.scroller.current.removeEventListener('scroll', this.handleWindowScroll)
-    } else {
+    if (this.isAutoHeight()) {
       window.removeEventListener('scroll', this.handleWindowScroll)
+    } else {
+      this.scroller.current.removeEventListener('scroll', this.handleWindowScroll)
     }
   }
 
   _handleWindowResize = () => {
     const { maxHeight } = this.props
-    let windowHeight
-    if (maxHeight > 0) {
-      windowHeight = maxHeight
+    let scrollerHeight
+    if (this.isAutoHeight()) {
+      scrollerHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
     } else {
-      windowHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+      scrollerHeight = maxHeight
     }
-    this.setState({ windowHeight }, () => {
+    this.setState({ scrollerHeight }, () => {
       this.handleWindowScroll()
     })
   }
 
   _handleWindowScroll = () => {
-    const { maxHeight, preRenderRowCount, headerRowHeight, rowHeight, data } = this.props
-    const { windowHeight } = this.state
+    const { preRenderRowCount, headerRowHeight, rowHeight, data } = this.props
+    const { scrollerHeight } = this.state
     const rectScroller = this.scroller.current.getBoundingClientRect()
     const detectMargin = preRenderRowCount * rowHeight
     const tbodyHeight = rowHeight * data.length
@@ -201,12 +205,12 @@ class DataTable extends Component {
     let renderFromIndex
     let renderToIndex
 
-    if (maxHeight > 0) {
-      tbodyTopY = -this.scroller.current.scrollTop + headerRowHeight + detectMargin
-      tbodyBottomY = -this.scroller.current.scrollTop + headerRowHeight + tbodyHeight - detectMargin
-    } else {
+    if (this.isAutoHeight()) {
       tbodyTopY = rectScroller.top + headerRowHeight + detectMargin
       tbodyBottomY = rectScroller.top + headerRowHeight + tbodyHeight - detectMargin
+    } else {
+      tbodyTopY = -this.scroller.current.scrollTop + headerRowHeight + detectMargin
+      tbodyBottomY = -this.scroller.current.scrollTop + headerRowHeight + tbodyHeight - detectMargin
     }    
 
     if (tbodyTopY >= 0) {
@@ -216,12 +220,12 @@ class DataTable extends Component {
     } else {
       renderFromIndex = data.length - 1
     }
-    if (tbodyBottomY - windowHeight >= 0) {
-      renderToIndex = data.length - 1 - Math.floor((tbodyBottomY - windowHeight) / rowHeight)
+    if (tbodyBottomY - scrollerHeight >= 0) {
+      renderToIndex = data.length - 1 - Math.floor((tbodyBottomY - scrollerHeight) / rowHeight)
     } else {
       renderToIndex = data.length - 1
     }
-    console.info(`from ${renderFromIndex} to ${renderToIndex}`)
+
     this.setState({
       renderFromIndex,
       renderToIndex,
@@ -240,7 +244,7 @@ class DataTable extends Component {
       <Wrapper>
         <Scroller
           ref={this.scroller}
-          maxHeight={maxHeight > 0 ? maxHeight : undefined}
+          maxHeight={this.isAutoHeight() ? undefined : maxHeight}
         >
           <StyledTable>
             <DataTable.TBody>

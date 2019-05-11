@@ -12,7 +12,7 @@ const Toolbar = styled.div`
 `
 
 const Placeholder = styled.div`
-  height: 180px;
+  height: 220px;
 `
 
 const App = () => {
@@ -25,7 +25,7 @@ const App = () => {
         <button onClick={() => setMaxHeight(maxHeight ? undefined : 400)}>
           Toggle maxHeight
         </button>
-        <button onClick={() => setThrottleWait(throttleWait === 200 ? 1000 : 200)}>
+        <button onClick={() => setThrottleWait(throttleWait === 200 ? 2000 : 200)}>
           Toggle throttleWait
         </button>
         <button onClick={() => setPreRenderRowCount(preRenderRowCount ? undefined : 10)}>
