@@ -258,7 +258,14 @@ class DataTable extends Component {
                 Array(renderedLength)
                   .fill(0)
                   .map((_, idx) => idx + renderFromIndex)
-                  .map(dataIndex => renderRow(data[dataIndex], dataIndex, data))
+                  .map(dataIndex => {
+                    const record = data[dataIndex]
+                    {/* when data is updated and row count is decreased, dataIndex may become out of bound */}
+                    if (record) {
+                      return renderRow(data[dataIndex], dataIndex, data)
+                    }
+                    return null
+                  })
               }
               {renderToIndex < data.length - 1 && (
                 <Tr height={rowHeight * (data.length - renderToIndex)} />
