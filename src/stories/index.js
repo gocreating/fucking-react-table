@@ -34,6 +34,7 @@ storiesOf('Basic', module)
     const throttleWait = number('throttleWait', 200, {}, propsGroup)
     const preRenderRowCount = number('preRenderRowCount', 0, {}, propsGroup)
     const globalStickyHeader = boolean('globalStickyHeader', false, propsGroup)
+    const localStickyHeader = boolean('localStickyHeader', false, propsGroup)
     const columns = generateColumns(columnCount)
     const data = generateRows(rowCount, columns)
 
@@ -55,6 +56,7 @@ storiesOf('Basic', module)
           throttleWait={throttleWait}
           preRenderRowCount={preRenderRowCount}
           globalStickyHeader={globalStickyHeader}
+          localStickyHeader={localStickyHeader}
         />
         <p>Content After Table</p>
         <p>Content After Table</p>

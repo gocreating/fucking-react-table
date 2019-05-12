@@ -57,19 +57,31 @@ const Tr = styled.tr`
   ${({ width }) => width && css`
     width: ${width}px;
   `}
-  ${({ globalSticky }) => globalSticky && css`
-    position: fixed;
-    top: 0px;
-  `}
+  ${props => {
+    if (props.globalSticky) {
+      return css`
+        position: fixed;
+        top: 0px;
+      `
+    }
+    if (props.localSticky) {
+      return css`
+        position: absolute;
+        top: 0px;
+      `
+    }
+  }}
 `
 
 Tr.propTypes = {
   globalSticky: PropTypes.bool,
+  localSticky: PropTypes.bool,
   width: PropTypes.number,
 };
 
 Tr.defaultProps = {
   globalSticky: false,
+  localSticky: false,
 };
 
 /**
@@ -257,28 +269,35 @@ class DataTable extends Component {
   }
 
   handleWindowScroll = () => {
+    const { preRenderRowCount, headerRowHeight, rowHeight, data } = this.props
+    const rectScroller = this.scroller.current.getBoundingClientRect()
+    let newState = {}
+
     if (this.isAutoHeight()) {
-      const { preRenderRowCount, headerRowHeight, rowHeight, data } = this.props
-      const rectScroller = this.scroller.current.getBoundingClientRect()
       const detectMargin = preRenderRowCount * rowHeight
       const tbodyHeight = rowHeight * data.length
       const tbodyTopY = rectScroller.top + headerRowHeight + detectMargin
       const tbodyBottomY = rectScroller.top + headerRowHeight + tbodyHeight - detectMargin
       const { renderFromIndex, renderToIndex } = this.getRenderIndexRange(tbodyTopY, tbodyBottomY)
-
-      const topOffset = 0
-      const bottomOffset = 0
-      const isGlobalHeaderSticky = (
-        rectScroller.top <= -topOffset &&
-        rectScroller.bottom > headerRowHeight - bottomOffset
-      )
-
-      this.setState({
+      newState = {
+        ...newState,
         renderFromIndex,
         renderToIndex,
-        isGlobalHeaderSticky,
-      })
+      }
     }
+
+    const topOffset = 0
+    const bottomOffset = 0
+    const isGlobalHeaderSticky = (
+      rectScroller.top <= -topOffset &&
+      rectScroller.bottom > headerRowHeight - bottomOffset
+    )
+    newState = {
+      ...newState,
+      isGlobalHeaderSticky,
+    }
+
+    this.setState(newState)
   }
 
   handleScrollerScroll = () => {
@@ -316,6 +335,7 @@ class DataTable extends Component {
       headerRowHeight,
       rowHeight,
       globalStickyHeader,
+      localStickyHeader,
       renderHeader,
       renderRow,
     } = this.props
@@ -323,6 +343,7 @@ class DataTable extends Component {
       renderFromIndex,
       renderToIndex,
       isGlobalHeaderSticky,
+      isLocalHeaderSticky,
       scrollerClientWidth,
     } = this.state
     const renderedLength = (
@@ -339,22 +360,24 @@ class DataTable extends Component {
           <StyledTable>
             <DataTable.TBody>
               {
-                globalStickyHeader ?
-                (
-                  React.cloneElement(
-                    renderHeader(),
-                    {
-                      ref: this.tHeadTr,
-                      globalSticky: isGlobalHeaderSticky,
-                      width: isGlobalHeaderSticky ? scrollerClientWidth : undefined,
-                    },
-                  )
-                ) :
-                renderHeader()
+                React.cloneElement(
+                  renderHeader(),
+                  {
+                    ref: this.tHeadTr,
+                    globalSticky: (globalStickyHeader && isGlobalHeaderSticky),
+                    localSticky: (localStickyHeader && isLocalHeaderSticky),
+                    width: (isGlobalHeaderSticky || isLocalHeaderSticky) ? scrollerClientWidth : undefined,
+                  },
+                )
               }
-              {globalStickyHeader && isGlobalHeaderSticky && (
-                <Tr height={headerRowHeight} />
-              )}
+              {
+                (
+                  (globalStickyHeader && isGlobalHeaderSticky) ||
+                  (localStickyHeader && isLocalHeaderSticky)
+                ) && (
+                  <Tr height={headerRowHeight} />
+                )
+              }
               {renderFromIndex > 0 && (
                 <Tr height={rowHeight * renderFromIndex} />
               )}
@@ -390,7 +413,7 @@ DataTable.propTypes = {
   throttleWait: PropTypes.number,
   preRenderRowCount: PropTypes.number,
   globalStickyHeader: PropTypes.bool,
-  stickyHeader: PropTypes.bool,
+  localStickyHeader: PropTypes.bool,
   renderHeader: PropTypes.func,
   renderRow: PropTypes.func,
 }
@@ -405,7 +428,7 @@ DataTable.defaultProps = {
   throttleWait: 200,
   preRenderRowCount: 0,
   globalStickyHeader: false,
-  stickyHeader: false,
+  localStickyHeader: false,
   renderHeader: () => {},
   renderRow: () => {},
 }
