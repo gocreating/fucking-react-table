@@ -1,7 +1,7 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-import generateColumns from '../src/utils/generateColumns'
-import generateRows from '../src/utils/generateRows'
+import generateColumns from '../utils/generateColumns'
+import generateRows from '../utils/generateRows'
 import DemoTable from './DemoTable'
 
 const column_3 = generateColumns(3)
