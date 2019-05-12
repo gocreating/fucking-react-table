@@ -17,11 +17,11 @@ npm start
 Launch local storybook
 
 ```
-npm run storybook
+yarn storybook
 ```
 
 Deploy to gh-pages
 
 ```
-npm run deploy-storybook
+yarn deploy-storybook
 ```
