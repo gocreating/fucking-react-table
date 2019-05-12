@@ -1,64 +1,12 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import SomeTable from './components/SomeTable'
+import DemoTable from './stories/DemoTable'
+import generateColumns from '../src/utils/generateColumns'
+import generateRows from './utils/generateRows'
 
-const columns = [{
-  key: 'column0',
-  content: 'Column 0',
-  width: 100,
-}, {
-  key: 'column1',
-  content: 'Column 1',
-  width: 150,
-}, {
-  key: 'column2',
-  content: 'Column 2',
-  width: 90,
-}, {
-  key: 'column3',
-  content: 'Column 3',
-  width: 230,
-}, {
-  key: 'column4',
-  content: 'Column 4',
-  width: 170,
-}, {
-  key: 'column5',
-  content: 'Column 5',
-  width: 100,
-}, {
-  key: 'column6',
-  content: 'Column 6',
-  width: 130,
-}, {
-  key: 'column7',
-  content: 'Column 7',
-  width: 170,
-}, {
-  key: 'column8',
-  content: 'Column 8',
-  width: 90,
-}, {
-  key: 'column9',
-  content: 'Column 9',
-  width: 160,
-}, {
-  key: 'column10',
-  content: 'Column 10',
-  width: 100,
-}]
-
-const getData = (rowCount) => Array(rowCount).fill(0).map((val, rowIndex) => ({
-  id: `row-id-${rowIndex}`,
-  width: (rowIndex + 1) * 10,
-  ...columns.reduce((obj, column, columnIndex) => ({
-    ...obj,
-    [column.key]: `cell (${rowIndex}, ${columnIndex})`,
-  }), {}),
-}))
-
-const data20 = getData(20)
-const data200 = getData(200)
+const column_10 = generateColumns(10)
+const data_10_row_10_column = generateRows(10, column_10)
+const data_100_row_10_column = generateRows(100, column_10)
 
 const Toolbar = styled.div`
   position: fixed;
@@ -74,14 +22,20 @@ const Placeholder = styled.div`
 `
 
 const App = () => {
-  const [data, setData] = useState(data20);
+  const [data, setData] = useState(data_10_row_10_column);
   const [maxHeight, setMaxHeight] = useState();
   const [throttleWait, setThrottleWait] = useState(200);
   const [preRenderRowCount, setPreRenderRowCount] = useState();
   return (
     <>
       <Toolbar>
-        <button onClick={() => setData(data.length === 20 ? data200 : data20)}>
+        <button
+          onClick={() => setData(
+            data.length === 20 ?
+            data_10_row_10_column :
+            data_100_row_10_column
+          )}
+        >
           Toggle data
         </button>
         <button onClick={() => setMaxHeight(maxHeight ? undefined : 400)}>
@@ -99,8 +53,8 @@ const App = () => {
         <p>preRenderRowCount: {preRenderRowCount ? `${preRenderRowCount}` : 'Disabled'}</p>
       </Toolbar>
       <Placeholder />
-      <SomeTable
-        columns={columns}
+      <DemoTable
+        columns={column_10}
         data={data}
         maxHeight={maxHeight}
         throttleWait={throttleWait}

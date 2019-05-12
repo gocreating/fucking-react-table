@@ -1,5 +1,5 @@
 import React from 'react'
-import DataTable from './DataTable'
+import DataTable from '../components/DataTable'
 
 const SomeTable = ({
   data, columns, maxHeight, throttleWait, preRenderRowCount,
@@ -15,7 +15,7 @@ const SomeTable = ({
       <DataTable.Tr>
         {columns.map(column => (
           <DataTable.Th
-            key={column.key}
+            key={column.id}
             cellWidth={column.width}
           >
             {column.content}
@@ -27,10 +27,10 @@ const SomeTable = ({
       <DataTable.Tr key={record.id}>
         {columns.map(column => (
           <DataTable.Td
-            key={`row-${record.id}-col-${column.key}`}
+            key={`row-${record.id}-col-${column.id}`}
             cellWidth={column.width}
           >
-            {record[column.key]}
+            {record[column.id]}
           </DataTable.Td>
         ))}
       </DataTable.Tr>
