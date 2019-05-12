@@ -143,6 +143,13 @@ Td.contextTypes = {
 };
 
 /**
+ * ClearFloat
+ */
+const ClearFloat = styled.div`
+  clear: both;
+`
+
+/**
  * DataTable
  */
 class DataTable extends Component {
@@ -251,10 +258,8 @@ class DataTable extends Component {
 
     if (tbodyTopY >= 0) {
       renderFromIndex = 0
-    } else if (tbodyTopY < 0 && 0 < tbodyBottomY) {
-      renderFromIndex = Math.floor(-tbodyTopY / rowHeight)
     } else {
-      renderFromIndex = data.length - 1
+      renderFromIndex = Math.min(Math.floor(-tbodyTopY / rowHeight), data.length - 1)
     }
     if (tbodyBottomY - scrollerHeight >= 0) {
       renderToIndex = data.length - 1 - Math.floor((tbodyBottomY - scrollerHeight) / rowHeight)
@@ -400,6 +405,7 @@ class DataTable extends Component {
             </DataTable.TBody>
           </StyledTable>
         </Scroller>
+        <ClearFloat />
       </Wrapper>
     )
   }
