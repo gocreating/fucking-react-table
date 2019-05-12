@@ -33,7 +33,7 @@ storiesOf('Basic', module)
     const maxHeight = number(`maxHeight ${enableMaxHeight ? '(enabled)' : '(disabled)'}`, 500, {}, propsGroup)
     const throttleWait = number('throttleWait', 200, {}, propsGroup)
     const preRenderRowCount = number('preRenderRowCount', 0, {}, propsGroup)
-    const stickyHeader = boolean('stickyHeader', false, propsGroup)
+    const globalStickyHeader = boolean('globalStickyHeader', false, propsGroup)
     const columns = generateColumns(columnCount)
     const data = generateRows(rowCount, columns)
 
@@ -54,7 +54,7 @@ storiesOf('Basic', module)
           maxHeight={enableMaxHeight ? maxHeight : undefined}
           throttleWait={throttleWait}
           preRenderRowCount={preRenderRowCount}
-          stickyHeader={stickyHeader}
+          globalStickyHeader={globalStickyHeader}
         />
         <p>Content After Table</p>
         <p>Content After Table</p>
