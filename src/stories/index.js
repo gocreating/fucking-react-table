@@ -1,86 +1,47 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
+import { number, boolean } from '@storybook/addon-knobs'
 import generateColumns from '../utils/generateColumns'
 import generateRows from '../utils/generateRows'
 import DemoTable from './DemoTable'
 
-const column_3 = generateColumns(3)
-const column_10 = generateColumns(10)
-const data_10_row_3_column = generateRows(10, column_3)
-const data_100_row_3_column = generateRows(100, column_3)
-const data_10_row_10_column = generateRows(10, column_10)
-const data_100_row_10_column = generateRows(100, column_10)
+storiesOf('Basic', module)
+  .add('default', () => {
+    const columnCount = number('Columns', 10)
+    const rowCount = number('Rows', 100)
 
-storiesOf('Virtualized Row', module)
-  .add('10 rows x 3 columns', () => (
-    <DemoTable
-      columns={column_3}
-      data={data_10_row_3_column}
-    />
-  ))
-  .add('100 rows x 3 columns', () => (
-    <DemoTable
-      columns={column_3}
-      data={data_100_row_3_column}
-    />
-  ))
-  .add('10 rows x 10 columns', () => (
-    <DemoTable
-      columns={column_10}
-      data={data_10_row_10_column}
-    />
-  ))
-  .add('100 rows x 10 columns', () => (
-    <DemoTable
-      columns={column_10}
-      data={data_100_row_10_column}
-    />
-  ))
+    const columns = generateColumns(columnCount)
+    const data = generateRows(rowCount, columns)
 
-storiesOf('maxHeight', module)
-  .add('maxHeight: 300px', () => (
-    <DemoTable
-      columns={column_3}
-      data={data_100_row_3_column}
-      maxHeight={300}
-    />
-  ))
-  .add('maxHeight: 500px', () => (
-    <DemoTable
-      columns={column_3}
-      data={data_100_row_3_column}
-      maxHeight={500}
-    />
-  ))
+    return (
+      <DemoTable
+        columns={columns}
+        data={data}
+      />
+    )
+  })
+  .add('custom props', () => {
+    const demoTableGroup = 'Demo Table'
+    const propsGroup = 'Props'
 
-storiesOf('throttleWait', module)
-  .add('throttleWait: 200ms', () => (
-    <DemoTable
-      columns={column_3}
-      data={data_100_row_3_column}
-      throttleWait={200}
-    />
-  ))
-  .add('throttleWait: 1000ms', () => (
-    <DemoTable
-      columns={column_3}
-      data={data_100_row_3_column}
-      throttleWait={1000}
-    />
-  ))
+    const columnCount = number('Columns', 10, {}, demoTableGroup)
+    const rowCount = number('Rows', 100, {}, demoTableGroup)
+    const enableMaxHeight = boolean('Enable max height', false, demoTableGroup)
 
-storiesOf('preRenderRowCount', module)
-  .add('preRenderRowCount: 0', () => (
-    <DemoTable
-      columns={column_3}
-      data={data_100_row_3_column}
-      preRenderRowCount={0}
-    />
-  ))
-  .add('preRenderRowCount: 10', () => (
-    <DemoTable
-      columns={column_3}
-      data={data_100_row_3_column}
-      preRenderRowCount={10}
-    />
-  ))
+    const maxHeight = number(`maxHeight ${enableMaxHeight ? '(enabled)' : '(disabled)'}`, 500, {}, propsGroup)
+    const throttleWait = number('throttleWait', 200, {}, propsGroup)
+    const preRenderRowCount = number('preRenderRowCount', 0, {}, propsGroup)
+
+    const columns = generateColumns(columnCount)
+    const data = generateRows(rowCount, columns)
+
+    return (
+      <DemoTable
+        columns={columns}
+        data={data}
+        maxHeight={enableMaxHeight ? maxHeight : undefined}
+        throttleWait={throttleWait}
+        preRenderRowCount={preRenderRowCount}
+      />
+    )
+  })

@@ -1,5 +1,9 @@
-import { addParameters, configure } from '@storybook/react'
+import { addParameters, addDecorator, configure } from '@storybook/react'
+import { withKnobs } from '@storybook/addon-knobs'
+import { withA11y } from '@storybook/addon-a11y'
 
+addDecorator(withKnobs)
+addDecorator(withA11y)
 addParameters({
   options: {
     /**
@@ -26,7 +30,7 @@ addParameters({
      * display panel that shows addon configurations
      * @type {Boolean}
      */
-    showAddonPanel: false,
+    showAddonPanel: true,
     /**
      * display floating search box to search through stories
      * @type {Boolean}
@@ -36,7 +40,7 @@ addParameters({
      * show addon panel as a vertical panel on the right
      * @type {Boolean}
      */
-    addonPanelInRight: false,
+    addonPanelInRight: true,
     /**
      * sorts stories
      * @type {Boolean}
