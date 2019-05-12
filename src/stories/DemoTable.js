@@ -1,16 +1,8 @@
 import React from 'react'
 import DataTable from '../components/DataTable'
 
-const SomeTable = ({
-  data, columns, maxHeight, throttleWait, preRenderRowCount,
-}) => (
+const DemoTable = ({ columns, ...rest }) => (
   <DataTable
-    data={data}
-    maxHeight={maxHeight}
-    throttleWait={throttleWait}
-    preRenderRowCount={preRenderRowCount}
-    headerRowHeight={44}
-    rowHeight={62}    
     renderHeader={() => (
       <DataTable.Tr>
         {columns.map(column => (
@@ -35,7 +27,8 @@ const SomeTable = ({
         ))}
       </DataTable.Tr>
     )}
+    {...rest}
   />
 )
 
-export default SomeTable
+export default DemoTable

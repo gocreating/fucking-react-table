@@ -15,6 +15,8 @@ storiesOf('Basic', module)
 
     return (
       <DemoTable
+        headerRowHeight={44}
+        rowHeight={62}
         columns={columns}
         data={data}
       />
@@ -25,23 +27,70 @@ storiesOf('Basic', module)
     const propsGroup = 'Props'
 
     const columnCount = number('Columns', 10, {}, demoTableGroup)
-    const rowCount = number('Rows', 100, {}, demoTableGroup)
+    const rowCount = number('Rows', 50, {}, demoTableGroup)
     const enableMaxHeight = boolean('Enable max height', false, demoTableGroup)
 
     const maxHeight = number(`maxHeight ${enableMaxHeight ? '(enabled)' : '(disabled)'}`, 500, {}, propsGroup)
     const throttleWait = number('throttleWait', 200, {}, propsGroup)
     const preRenderRowCount = number('preRenderRowCount', 0, {}, propsGroup)
-
+    const stickyHeader = boolean('stickyHeader', false, propsGroup)
     const columns = generateColumns(columnCount)
     const data = generateRows(rowCount, columns)
 
     return (
-      <DemoTable
-        columns={columns}
-        data={data}
-        maxHeight={enableMaxHeight ? maxHeight : undefined}
-        throttleWait={throttleWait}
-        preRenderRowCount={preRenderRowCount}
-      />
+      <div>
+        <p>Content Before Table</p>
+        <p>Content Before Table</p>
+        <p>Content Before Table</p>
+        <p>Content Before Table</p>
+        <p>Content Before Table</p>
+        <p>Content Before Table</p>
+        <p>Content Before Table</p>
+        <DemoTable
+          headerRowHeight={44}
+          rowHeight={62}
+          columns={columns}
+          data={data}
+          maxHeight={enableMaxHeight ? maxHeight : undefined}
+          throttleWait={throttleWait}
+          preRenderRowCount={preRenderRowCount}
+          stickyHeader={stickyHeader}
+        />
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+        <p>Content After Table</p>
+      </div>
     )
   })
