@@ -35,6 +35,7 @@ storiesOf('Basic', module)
     const preRenderRowCount = number('preRenderRowCount', 0, {}, propsGroup)
     const globalStickyHeader = boolean('globalStickyHeader', false, propsGroup)
     const localStickyHeader = boolean('localStickyHeader', false, propsGroup)
+    const enableStickyHeaderShadow = boolean('enableStickyHeaderShadow', false, propsGroup)
     const columns = generateColumns(columnCount)
     const data = generateRows(rowCount, columns)
 
@@ -57,6 +58,7 @@ storiesOf('Basic', module)
           preRenderRowCount={preRenderRowCount}
           globalStickyHeader={globalStickyHeader}
           localStickyHeader={localStickyHeader}
+          enableStickyHeaderShadow={enableStickyHeaderShadow}
         />
         <p>Content After Table</p>
         <p>Content After Table</p>

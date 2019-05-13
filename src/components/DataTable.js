@@ -71,17 +71,22 @@ const Tr = styled.tr`
       `
     }
   }}
+  ${({ bottomShadow }) => bottomShadow && css`
+    box-shadow: 0 15px 15px -15px rgba(0, 0, 0, 1);
+  `}
 `
 
 Tr.propTypes = {
+  width: PropTypes.number,
   globalSticky: PropTypes.bool,
   localSticky: PropTypes.bool,
-  width: PropTypes.number,
+  bottomShadow: PropTypes.bool,
 };
 
 Tr.defaultProps = {
   globalSticky: false,
   localSticky: false,
+  bottomShadow: false,
 };
 
 /**
@@ -341,6 +346,7 @@ class DataTable extends Component {
       rowHeight,
       globalStickyHeader,
       localStickyHeader,
+      enableStickyHeaderShadow,
       renderHeader,
       renderRow,
     } = this.props
@@ -372,6 +378,12 @@ class DataTable extends Component {
                     globalSticky: (globalStickyHeader && isGlobalHeaderSticky),
                     localSticky: (localStickyHeader && isLocalHeaderSticky),
                     width: (isGlobalHeaderSticky || isLocalHeaderSticky) ? scrollerClientWidth : undefined,
+                    bottomShadow: (
+                      enableStickyHeaderShadow && (
+                        (globalStickyHeader && isGlobalHeaderSticky) ||
+                        (localStickyHeader && isLocalHeaderSticky)
+                      )
+                    ),
                   },
                 )
               }
@@ -420,6 +432,7 @@ DataTable.propTypes = {
   preRenderRowCount: PropTypes.number,
   globalStickyHeader: PropTypes.bool,
   localStickyHeader: PropTypes.bool,
+  enableStickyHeaderShadow: PropTypes.bool,
   renderHeader: PropTypes.func,
   renderRow: PropTypes.func,
 }
@@ -435,6 +448,7 @@ DataTable.defaultProps = {
   preRenderRowCount: 0,
   globalStickyHeader: false,
   localStickyHeader: false,
+  enableStickyHeaderShadow: true,
   renderHeader: () => {},
   renderRow: () => {},
 }
