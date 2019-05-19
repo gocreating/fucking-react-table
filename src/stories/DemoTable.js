@@ -1,31 +1,50 @@
 import React from 'react'
+import styled from 'styled-components'
 import DataTable from '../components/DataTable'
 
+const Table = styled(DataTable)`
+  background-color: #26282b;
+`
+
+const Tr = styled(DataTable.Tr)`
+  background-color: rgb(53, 55, 58);
+`
+
+const Th = styled(DataTable.Th)`
+  background-color: rgb(62, 63, 66);
+  color: rgb(156, 157, 158);
+`
+
+const Td = styled(DataTable.Td)`
+  background-color: rgb(53, 55, 58);
+  color: #ffffff;
+`
+
 const DemoTable = ({ columns, ...rest }) => (
-  <DataTable
+  <Table
     renderHeader={() => (
-      <DataTable.Tr>
+      <Tr>
         {columns.map(column => (
-          <DataTable.Th
+          <Th
             key={column.id}
             cellWidth={column.width}
           >
             {column.content}
-          </DataTable.Th>
+          </Th>
         ))}
-      </DataTable.Tr>
+      </Tr>
     )}
     renderRow={record => (
-      <DataTable.Tr key={record.id}>
+      <Tr key={record.id}>
         {columns.map(column => (
-          <DataTable.Td
+          <Td
             key={`row-${record.id}-col-${column.id}`}
             cellWidth={column.width}
           >
             {record[column.id]}
-          </DataTable.Td>
+          </Td>
         ))}
-      </DataTable.Tr>
+      </Tr>
     )}
     {...rest}
   />

@@ -33,7 +33,6 @@ Scroller.propTypes = {
  */
 const StyledTable = styled.table`
   border-collapse: collapse;
-  background-color: #26282b;
 `
 
 /**
@@ -53,7 +52,6 @@ const TBody = styled.tbody`
  */
 const Tr = styled.tr`
   overflow: hidden;
-  background-color: rgb(62, 63, 66);
   ${({ width }) => width && css`
     width: ${width}px;
   `}
@@ -94,8 +92,6 @@ Tr.defaultProps = {
  */
 const StyledTh = styled.th`
   text-align: left;
-  background-color: rgba(255, 255, 255, 0.1);
-  color: #aaaaaa;
   white-space: nowrap;
   ${({ cellWidth }) => css`
     min-width: ${cellWidth}px;
@@ -123,9 +119,7 @@ Th.contextTypes = {
  */
 const StyledTd = styled.td`
   text-align: left;
-  background-color: rgba(255, 255, 255, 0.06);
   white-space: nowrap;
-  color: #ffffff;
   ${({ cellWidth }) => css`
     min-width: ${cellWidth}px;
   `}
@@ -349,6 +343,7 @@ class DataTable extends Component {
       enableStickyHeaderShadow,
       renderHeader,
       renderRow,
+      ...rest
     } = this.props
     const {
       renderFromIndex,
@@ -363,7 +358,7 @@ class DataTable extends Component {
       1
     )
     return (
-      <Wrapper>
+      <Wrapper {...rest}>
         <Scroller
           ref={this.scroller}
           maxHeight={this.isAutoHeight() ? undefined : maxHeight}
