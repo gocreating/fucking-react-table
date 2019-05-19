@@ -142,6 +142,34 @@ storiesOf('Quick Start|Default', module)
       />
     )
   })
+  .add('Small Table without Header', () => {
+    const data = [
+      {
+        id: 'a',
+        value: 'Apple',
+      },
+      {
+        id: 'b',
+        value: 'Banana',
+      },
+    ]
+    const Tr = DataTable.Tr
+    const Td = DataTable.Td
+
+    return (
+      <DataTable
+        data={data}
+        headerRowHeight={0}
+        rowHeight={80}
+        renderRow={row => (
+          <Tr key={row.id}>
+            <Td cellWidth={100}>{row.id}</Td>
+            <Td cellWidth={150}>{row.value}</Td>
+          </Tr>
+        )}
+      />
+    )
+  })
   .add('Big Table', () => {
     const columns = generateColumns(10)
     const data = generateRows(10000, columns)
@@ -166,6 +194,32 @@ storiesOf('Quick Start|Default', module)
             ))}
           </Tr>
         )}
+        renderRow={row => (
+          <Tr key={row.id}>
+            {columns.map((column, columnIndex) => (
+              <Td
+                key={`row-${row}.id}-col-${column.id}`}
+                cellWidth={column.width}
+              >
+                {row[column.id]}
+              </Td>
+            ))}
+          </Tr>
+        )}
+      />
+    )
+  })
+  .add('Big Table without Header', () => {
+    const columns = generateColumns(10)
+    const data = generateRows(10000, columns)
+    const Tr = DataTable.Tr
+    const Td = DataTable.Td
+
+    return (
+      <DataTable
+        data={data}
+        headerRowHeight={0}
+        rowHeight={80}
         renderRow={row => (
           <Tr key={row.id}>
             {columns.map((column, columnIndex) => (

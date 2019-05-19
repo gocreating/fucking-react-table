@@ -372,6 +372,7 @@ class DataTable extends Component {
       renderToIndex - renderFromIndex + 1 :
       1
     )
+    const initialRenderedTableHeader = renderHeader()
     return (
       <Wrapper {...rest}>
         <Scroller
@@ -380,9 +381,9 @@ class DataTable extends Component {
         >
           <StyledTable>
             <DataTable.TBody>
-              {
+              {initialRenderedTableHeader && (
                 React.cloneElement(
-                  renderHeader(),
+                  initialRenderedTableHeader,
                   {
                     ref: this.tHeadTr,
                     globalSticky: (globalStickyHeader && isGlobalHeaderSticky),
@@ -396,7 +397,7 @@ class DataTable extends Component {
                     ),
                   },
                 )
-              }
+              )}
               {
                 (
                   (globalStickyHeader && isGlobalHeaderSticky) ||
