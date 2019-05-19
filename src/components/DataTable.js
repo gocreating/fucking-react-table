@@ -8,6 +8,10 @@ import styled, { css } from 'styled-components'
  */
 const Wrapper = styled.div`
   position: relative;
+  /* Fit child width */
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
 `
 
 /**
@@ -33,6 +37,11 @@ Scroller.propTypes = {
  */
 const StyledTable = styled.table`
   border-collapse: collapse;
+  /* clear agent styles */
+  & * {
+    margin: 0px;
+    padding: 0px;
+  }
 `
 
 /**
@@ -97,6 +106,7 @@ const StyledTh = styled.th`
     min-width: ${cellWidth}px;
   `}
   height: ${(props) => props.height}px;
+  line-height: ${(props) => props.height}px;
 `
 
 StyledTh.propTypes = {
@@ -124,6 +134,7 @@ const StyledTd = styled.td`
     min-width: ${cellWidth}px;
   `}
   height: ${props => props.height}px;
+  line-height: ${props => props.height}px;
 `
 
 StyledTd.propTypes = {
