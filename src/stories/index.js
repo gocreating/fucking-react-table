@@ -23,6 +23,7 @@ export const ContentAfter = () => (
     <p>Pellentesque vel nunc finibus, ultricies lorem at, fermentum libero. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Morbi eu scelerisque lorem. Sed aliquet est in diam sollicitudin, a accumsan eros elementum. Curabitur sit amet consequat lacus. Fusce imperdiet urna eget interdum bibendum. Mauris commodo, nisl vel posuere interdum, justo erat commodo neque, pulvinar viverra est enim non mi. Nulla commodo varius ipsum, interdum sagittis neque tincidunt a. Sed leo enim, malesuada id aliquam vitae, imperdiet ut urna. Vestibulum mollis velit non est tempor iaculis. Vestibulum sollicitudin maximus orci quis hendrerit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. In dignissim at ligula nec scelerisque. Suspendisse condimentum porta urna, a aliquet leo iaculis in.</p>
     <p>Mauris a dui et erat imperdiet facilisis. Maecenas mauris est, congue vel felis congue, posuere malesuada risus. Duis tempus tortor et blandit porta. Donec felis quam, euismod ac tortor interdum, suscipit ultricies quam. Aenean volutpat maximus justo, nec porta turpis. Sed eget ex ipsum. Vivamus odio ante, mollis at tempor non, tempor sit amet nisl. Morbi ullamcorper ipsum in mauris accumsan condimentum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nam semper congue venenatis.</p>
     <p>Curabitur molestie sapien eget quam faucibus rutrum. Suspendisse fringilla consectetur quam non blandit. Suspendisse hendrerit molestie euismod. Nullam quis libero quam. Vivamus interdum lectus sit amet purus auctor, a scelerisque massa pretium. Maecenas sed ex et nunc congue finibus non quis nibh. Ut rutrum, nisi a varius posuere, quam metus egestas est, vel rhoncus quam eros vitae sem. Suspendisse blandit pellentesque egestas. Cras maximus ullamcorper magna, nec vehicula mauris ultrices vitae. Proin suscipit non massa ut vulputate. Maecenas felis sapien, pulvinar a lobortis in, consequat sit amet enim. Ut convallis tellus ut scelerisque hendrerit. Etiam sit amet ullamcorper mauris. Quisque ut euismod sem, at tristique orci.</p>
+    <p>Proin varius leo id semper dictum. Maecenas pellentesque fermentum lorem sed congue. Aenean ornare, metus ac tempor interdum, orci sem elementum lacus, interdum ultricies arcu justo non libero. Sed vel velit sed tellus efficitur tincidunt dapibus non ligula. Praesent dui justo, placerat nec bibendum at, vestibulum quis dolor. Cras venenatis euismod pulvinar. Etiam ornare scelerisque purus sed fringilla. Cras pharetra feugiat justo eget placerat. Nulla non metus sit amet lorem sagittis pharetra non quis sem. Integer luctus posuere elit, non malesuada nibh pharetra vel. Morbi tincidunt lobortis nibh, a rutrum risus scelerisque quis. Sed vel placerat velit. Pellentesque egestas, orci et placerat feugiat, mauris dolor volutpat sapien, sit amet aliquet nisl lacus ut felis.</p>
   </>
 )
 
@@ -31,7 +32,7 @@ const defineProps = (overwriteValues) => {
     columnCount: 10,
     rowCount: 50,
     maxHeight: undefined,
-    throttleWait: 200,
+    throttleWait: 16,
     preRenderRowCount: 0,
     globalStickyHeader: false,
     localStickyHeader: false,
@@ -88,6 +89,15 @@ const createScenario = (overwriteValues) => {
   )
 }
 
+const negativePreRenderInfo = {
+  info: {
+    disable: false,
+    text: `
+      \`preRenderRowCount\` can be negative!
+    `,
+  },
+}
+
 /*
  #################
  ## Full Height ##
@@ -116,18 +126,11 @@ storiesOf('Full Height|Virtualized Rows/Pre-render Rows', module)
   }))
   .add('Negative (-2)', () => createScenario({
     preRenderRowCount: -2,
-  }), {
-    info: {
-      disable: false,
-      text: `
-        \`preRenderRowCount\` can be negative!
-      `,
-    },
-  })
+  }), negativePreRenderInfo)
 
 storiesOf('Full Height|Sticky Header', module)
   .addParameters({ info: { disable: true } })
-  .add('Basic', () => createScenario({
+  .add('Basic (Global Sticky)', () => createScenario({
     globalStickyHeader: true,
   }))
 
@@ -172,13 +175,20 @@ storiesOf('Limit Height|Virtualized Rows/Pre-render Rows', module)
   .add('Negative (-2)', () => createScenario({
     maxHeight: 500,
     preRenderRowCount: -2,
-  }), { notes: { markdown:
-    '`preRenderRowCount` can be negative!',
-  }})
+  }), negativePreRenderInfo)
 
 storiesOf('Limit Height|Sticky Header', module)
   .addParameters({ info: { disable: true } })
-  .add('Basic', () => createScenario({
+  .add('Basic (Local Sticky Only)', () => createScenario({
+    maxHeight: 500,
+    localStickyHeader: true,
+  }))
+
+storiesOf('Limit Height|Sticky Header', module)
+  .addParameters({ info: { disable: true } })
+  .add('Local Sticky & Global Sticky', () => createScenario({
+    maxHeight: 500,
+    localStickyHeader: true,
     globalStickyHeader: true,
   }))
 
@@ -186,6 +196,6 @@ storiesOf('Limit Height|Sticky Header', module)
   .addParameters({ info: { disable: true } })
   .add('With Shadow', () => createScenario({
     maxHeight: 500,
-    globalStickyHeader: true,
+    localStickyHeader: true,
     enableStickyHeaderShadow: true,
   }))
