@@ -3,6 +3,7 @@ import { storiesOf } from '@storybook/react'
 import { number, boolean } from '@storybook/addon-knobs'
 import generateColumns from '../utils/generateColumns'
 import generateRows from '../utils/generateRows'
+import DataTable from '../components/DataTable'
 import DemoTable from './DemoTable'
 
 export const ContentBefore = () => (
@@ -97,6 +98,89 @@ const negativePreRenderInfo = {
     `,
   },
 }
+
+/*
+ #################
+ ## Quick Start ##
+ #################
+*/
+
+storiesOf('Quick Start|Default', module)
+  .addParameters({ info: { disable: true } })
+  .add('Small Table', () => {
+    const data = [
+      {
+        id: 'a',
+        value: 'Apple',
+      },
+      {
+        id: 'b',
+        value: 'Banana',
+      },
+    ]
+    const Tr = DataTable.Tr
+    const Th = DataTable.Th
+    const Td = DataTable.Td
+
+    return (
+      <DataTable
+        data={data}
+        headerRowHeight={60}
+        rowHeight={80}
+        renderHeader={() => (
+          <Tr>
+            <Th cellWidth={100}>ID</Th>
+            <Th cellWidth={150}>Fruit</Th>
+          </Tr>
+        )}
+        renderRow={row => (
+          <Tr key={row.id}>
+            <Td cellWidth={100}>{row.id}</Td>
+            <Td cellWidth={150}>{row.value}</Td>
+          </Tr>
+        )}
+      />
+    )
+  })
+  .add('Big Table', () => {
+    const columns = generateColumns(10)
+    const data = generateRows(10000, columns)
+    const Tr = DataTable.Tr
+    const Th = DataTable.Th
+    const Td = DataTable.Td
+
+    return (
+      <DataTable
+        data={data}
+        headerRowHeight={60}
+        rowHeight={80}
+        renderHeader={() => (
+          <Tr>
+            {columns.map((column, columnIndex) => (
+              <Th
+                key={column.id}
+                cellWidth={column.width}
+              >
+                {column.content}
+              </Th>
+            ))}
+          </Tr>
+        )}
+        renderRow={row => (
+          <Tr key={row.id}>
+            {columns.map((column, columnIndex) => (
+              <Td
+                key={`row-${row}.id}-col-${column.id}`}
+                cellWidth={column.width}
+              >
+                {row[column.id]}
+              </Td>
+            ))}
+          </Tr>
+        )}
+      />
+    )
+  })
 
 /*
  #################
