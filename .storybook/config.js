@@ -1,36 +1,52 @@
 import { addParameters, addDecorator, configure } from '@storybook/react'
 import { withKnobs } from '@storybook/addon-knobs'
 import { withA11y } from '@storybook/addon-a11y'
+import { withInfo } from '@storybook/addon-info'
+import { ContentBefore, ContentAfter } from '../src/stories/index'
+import DemoTable from '../src/stories/DemoTable'
 
 addDecorator(withKnobs)
 addDecorator(withA11y)
+addDecorator(withInfo({
+  inline: false,
+  header: false,
+  source: false,
+  propTablesExclude: [DemoTable, ContentBefore, ContentAfter],
+}))
 addParameters({
   options: {
     /**
      * name to display in the top left corner
      * @type {String}
      */
-    name: 'React Virtual Table',
+    // name: 'React Virtual Table',
     /**
      * URL for name in top left corner to link to
      * @type {String}
      */
-    url: '#',
+    // url: '#',
+    theme: {
+      brandTitle: 'React Virtual Table',
+      brandUrl: '#',
+    },
     /**
      * show story component as full screen
      * @type {Boolean}
      */
-    goFullScreen: false,
+    // goFullScreen: false,
+    isFullscreen: false,
     /**
      * display panel that shows a list of stories
      * @type {Boolean}
      */
-    showStoriesPanel: true,
+    // showStoriesPanel: true,
+    showNav: true,
     /**
      * display panel that shows addon configurations
      * @type {Boolean}
      */
-    showAddonPanel: true,
+    // showAddonPanel: true,
+    showPanel: true,
     /**
      * display floating search box to search through stories
      * @type {Boolean}
@@ -40,7 +56,8 @@ addParameters({
      * show addon panel as a vertical panel on the right
      * @type {Boolean}
      */
-    addonPanelInRight: true,
+    // addonPanelInRight: true,
+    panelPosition: 'right',
     /**
      * sorts stories
      * @type {Boolean}
@@ -55,7 +72,7 @@ addParameters({
      *   /\/|\./ - split by `/` or `.`
      * @type {Regex}
      */
-    hierarchySeparator: null,
+    hierarchySeparator: /\//,
     /**
      * regex for finding the hierarchy root separator
      * @example:
@@ -63,7 +80,7 @@ addParameters({
      *   /\|/ - split by `|`
      * @type {Regex}
      */
-    hierarchyRootSeparator: null,
+    hierarchyRootSeparator: /\|/,
     /**
      * sidebar tree animations
      * @type {Boolean}

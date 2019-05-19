@@ -444,7 +444,7 @@ DataTable.childContextTypes = {
 
 DataTable.defaultProps = {
   maxHeight: -1,
-  throttleWait: 200,
+  throttleWait: 16,
   preRenderRowCount: 0,
   globalStickyHeader: false,
   localStickyHeader: false,
