@@ -190,12 +190,16 @@ class DataTable extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { globalStickyHeader, maxHeight, throttleWait } = this.props
+    const { columnCount, globalStickyHeader, maxHeight, throttleWait } = this.props
     const { isGlobalHeaderSticky } = this.state
+    const prevColumnCount = prevProps.columnCount
     const prevMaxHeight = prevProps.maxHeight
     const prevThrottleWait = prevProps.throttleWait
     const prevIsHeaderSticky = prevState.isGlobalHeaderSticky
 
+    if (columnCount !== prevColumnCount) {
+      this.handleWindowResize()
+    }
     if (
       globalStickyHeader &&
       isGlobalHeaderSticky !== prevIsHeaderSticky &&
@@ -433,6 +437,7 @@ DataTable.propTypes = {
   data: PropTypes.array.isRequired,
   headerRowHeight: PropTypes.number.isRequired,
   rowHeight: PropTypes.number.isRequired,
+  columnCount: PropTypes.number,
   maxHeight: PropTypes.number,
   throttleWait: PropTypes.number,
   preRenderRowCount: PropTypes.number,
