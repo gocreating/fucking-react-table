@@ -229,7 +229,7 @@ class DataTable extends Component {
     const { throttleWait } = this.props
     this.throttledHandleWindowResize = throttle(this.handleWindowResize, throttleWait)
     this.throttledHandleWindowScroll = throttle(this.handleWindowScroll, throttleWait)
-    this.throttledHandleScrollerScroll = throttle(this.handleScrollerScroll, 10)
+    this.throttledHandleScrollerScroll = throttle(this.handleScrollerScroll, this.isAutoHeight() ? 16 : throttleWait)
     this.handleWindowResize()
     this.handleWindowScroll()
     this.handleScrollerScroll()
@@ -320,9 +320,9 @@ class DataTable extends Component {
   }
 
   handleScrollerScroll = () => {
-    const { preRenderRowCount, headerRowHeight, rowHeight, data, globalStickyHeader } = this.props
+    const { preRenderRowCount, headerRowHeight, rowHeight, data, globalStickyHeader, localStickyHeader } = this.props
 
-    if (globalStickyHeader) {
+    if (globalStickyHeader || localStickyHeader) {
       this.syncStickyHeaderScrollLeft()
     }
     if (!this.isAutoHeight()) {
