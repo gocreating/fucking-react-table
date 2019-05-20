@@ -50,12 +50,32 @@ return (
 
 ## Props
 
+### DataTable
+
 | prop name | required | description |
 | --------- | -------- | ----------- |
 | `data` | yes | data source |
 | `headerRowHeight` | yes | Fixed row height of table header. Table header is not virtualized and is always rendered. |
 | `rowHeight` | yes | fixed row height of table row |
 | `columnCount` | conditional | if your column count will change during runtime, you must pass current column count. This prop is only for detecting width changing and won't affect any other table behaviors. |
+| TBD |  |  |
+
+### DataTable.Tr
+
+| prop name | required | description |
+| --------- | -------- | ----------- |
+| TBD |  |  |
+
+### DataTable.Th
+
+| prop name | required | description |
+| --------- | -------- | ----------- |
+| TBD |  |  |
+
+### DataTable.Td
+
+| prop name | required | description |
+| --------- | -------- | ----------- |
 | TBD |  |  |
 
 ## Development
