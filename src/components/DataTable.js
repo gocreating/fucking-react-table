@@ -61,6 +61,7 @@ const TBody = styled.tbody`
  */
 const Tr = styled.tr`
   overflow: hidden;
+  z-index: 999;
   ${({ width }) => width && css`
     width: ${width}px;
   `}
@@ -107,6 +108,10 @@ const StyledTh = styled.th`
   `}
   height: ${(props) => props.height}px;
   line-height: ${(props) => props.height}px;
+  ${({ freezeLeftOffset }) => typeof freezeLeftOffset === 'number' && css`
+    position: sticky;
+    left: ${freezeLeftOffset}px;
+  `}
 `
 
 StyledTh.propTypes = {
@@ -135,6 +140,10 @@ const StyledTd = styled.td`
   `}
   height: ${props => props.height}px;
   line-height: ${props => props.height}px;
+  ${({ freezeLeftOffset }) => typeof freezeLeftOffset === 'number' && css`
+    position: sticky;
+    left: ${freezeLeftOffset}px;
+  `}
 `
 
 StyledTd.propTypes = {
@@ -153,6 +162,17 @@ Td.contextTypes = {
 };
 
 /**
+ * Shadow Td
+ */
+const ShadowedTd = styled(StyledTd).attrs({
+  cellWidth: 15,
+})`
+  z-index: 99999;
+  box-shadow: inset 15px 0 15px -15px rgba(0, 0, 0, 1);
+  position: absolute;
+`
+
+/**
  * ClearFloat
  */
 const ClearFloat = styled.div`
@@ -166,10 +186,12 @@ class DataTable extends Component {
   constructor(props) {
     super(props)
     this.scroller = React.createRef()
+    this.styledTable = React.createRef()
     this.tHeadTr = React.createRef()
     this.state = {
       scrollerClientWidth: 0,
       scrollerHeight: 0,
+      scrollerScrollLeft: 0,
       renderFromIndex: 0,
       renderToIndex: 0,
       isGlobalHeaderSticky: false,
@@ -187,6 +209,7 @@ class DataTable extends Component {
 
   componentDidMount() {
     this.addListeners()
+    this.handleWindowResize()
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -248,13 +271,13 @@ class DataTable extends Component {
   }
 
   handleWindowResize = () => {
-    const { maxHeight } = this.props
     const scrollerClientWidth = this.scroller.current.clientWidth
+    const scrollerClientHeight = this.scroller.current.clientHeight
     let scrollerHeight
     if (this.isAutoHeight()) {
       scrollerHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
     } else {
-      scrollerHeight = maxHeight
+      scrollerHeight = scrollerClientHeight
     }
     this.setState({
       scrollerClientWidth,
@@ -320,7 +343,16 @@ class DataTable extends Component {
   }
 
   handleScrollerScroll = () => {
-    const { preRenderRowCount, headerRowHeight, rowHeight, data, globalStickyHeader, localStickyHeader } = this.props
+    const {
+      preRenderRowCount,
+      headerRowHeight,
+      rowHeight,
+      data,
+      globalStickyHeader,
+      localStickyHeader,
+      enableFreezeColumnShadow,
+    } = this.props
+    let newState = {}
 
     if (globalStickyHeader || localStickyHeader) {
       this.syncStickyHeaderScrollLeft()
@@ -332,14 +364,23 @@ class DataTable extends Component {
       const tbodyTopY = -scrollerScrollTop + headerRowHeight + detectMargin
       const tbodyBottomY = -scrollerScrollTop + headerRowHeight + tbodyHeight - detectMargin
       const { renderFromIndex, renderToIndex } = this.getRenderIndexRange(tbodyTopY, tbodyBottomY)
-
       const isLocalHeaderSticky = (scrollerScrollTop > 0)
 
-      this.setState({
+      newState = {
+        ...newState,
         renderFromIndex,
         renderToIndex,
         isLocalHeaderSticky,
-      })
+      }
+    }
+    if (enableFreezeColumnShadow) {
+      newState = {
+        ...newState,
+        scrollerScrollLeft: this.scroller.current.scrollLeft,
+      }
+    }
+    if (Object.keys(newState).length > 0) {
+      this.setState(newState)
     }
   }
 
@@ -356,6 +397,8 @@ class DataTable extends Component {
       globalStickyHeader,
       localStickyHeader,
       enableStickyHeaderShadow,
+      enableFreezeColumnShadow,
+      freezeColumnShadowLeftOffset,
       renderHeader,
       renderRow,
       ...rest
@@ -366,6 +409,8 @@ class DataTable extends Component {
       isGlobalHeaderSticky,
       isLocalHeaderSticky,
       scrollerClientWidth,
+      scrollerHeight,
+      scrollerScrollLeft,
     } = this.state
     const renderedLength = (
       renderToIndex > renderFromIndex ?
@@ -379,8 +424,21 @@ class DataTable extends Component {
           ref={this.scroller}
           maxHeight={this.isAutoHeight() ? undefined : maxHeight}
         >
-          <StyledTable>
+          <StyledTable ref={this.styledTable}>
             <DataTable.TBody>
+              {(
+                enableFreezeColumnShadow &&
+                typeof freezeColumnShadowLeftOffset === 'number' &&
+                scrollerScrollLeft > 0
+              ) && (
+                <Tr>
+                  <ShadowedTd
+                    rowSpan="0"
+                    freezeLeftOffset={freezeColumnShadowLeftOffset}
+                    height={this.isAutoHeight() ? (this.styledTable.current || {}).clientHeight : scrollerHeight}
+                  />
+                </Tr>
+              )}
               {initialRenderedTableHeader && (
                 React.cloneElement(
                   initialRenderedTableHeader,
@@ -445,6 +503,8 @@ DataTable.propTypes = {
   globalStickyHeader: PropTypes.bool,
   localStickyHeader: PropTypes.bool,
   enableStickyHeaderShadow: PropTypes.bool,
+  enableFreezeColumnShadow: PropTypes.bool,
+  freezeColumnShadowLeftOffset: PropTypes.number,
   renderHeader: PropTypes.func,
   renderRow: PropTypes.func,
 }
@@ -461,6 +521,8 @@ DataTable.defaultProps = {
   globalStickyHeader: false,
   localStickyHeader: false,
   enableStickyHeaderShadow: true,
+  enableFreezeColumnShadow: true,
+  freezeColumnShadowLeftOffset: null,
   renderHeader: () => {},
   renderRow: () => {},
 }
