@@ -304,6 +304,15 @@ storiesOf('Full Height|Freeze Columns', module)
     enableFreezeColumnShadow: true,
   }))
 
+storiesOf('Full Height|Sticky Header & Freeze Columns', module)
+  .addParameters({ info: { disable: true } })
+  .add('Demo', () => createScenario({
+    globalStickyHeader: true,
+    enableStickyHeaderShadow: true,
+    freezeToColumnIndex: 2,
+    enableFreezeColumnShadow: true,
+  }))
+
 /*
 ##################
 ## Limit Height ##
@@ -381,5 +390,15 @@ storiesOf('Limit Height|Freeze Columns', module)
   .add('With shadow attached to column 3', () => createScenario({
     maxHeight: 500,
     freezeToColumnIndex: 3,
+    enableFreezeColumnShadow: true,
+  }))
+
+storiesOf('Limit Height|Sticky Header & Freeze Columns', module)
+  .addParameters({ info: { disable: true } })
+  .add('Demo', () => createScenario({
+    maxHeight: 500,
+    localStickyHeader: true,
+    enableStickyHeaderShadow: true,
+    freezeToColumnIndex: 2,
     enableFreezeColumnShadow: true,
   }))
