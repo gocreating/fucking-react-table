@@ -32,12 +32,14 @@ const defineProps = (overwriteValues) => {
   const defaultValues = {
     columnCount: 10,
     rowCount: 50,
+    freezeToColumnIndex: undefined,
     maxHeight: undefined,
     throttleWait: 16,
     preRenderRowCount: 0,
     globalStickyHeader: false,
     localStickyHeader: false,
     enableStickyHeaderShadow: false,
+    enableFreezeColumnShadow: false,
   }
   const initialValues = Object.assign({}, defaultValues, overwriteValues)
 
@@ -49,6 +51,9 @@ const defineProps = (overwriteValues) => {
   const columnCount = number('Columns', initialValues.columnCount, {}, demoTableGroup)
   const rowCount = number('Rows', initialValues.rowCount, {}, demoTableGroup)
   const columns = generateColumns(columnCount)
+  const freezeToColumnIndex = number(
+    'Freeze To Column Index', initialValues.freezeToColumnIndex, {}, demoTableGroup
+  )
 
   // react-virtual-table props
   const data = generateRows(rowCount, columns)
@@ -58,11 +63,13 @@ const defineProps = (overwriteValues) => {
   const globalStickyHeader = boolean('globalStickyHeader', initialValues.globalStickyHeader, propsGroup)
   const localStickyHeader = boolean('localStickyHeader', initialValues.localStickyHeader, propsGroup)
   const enableStickyHeaderShadow = boolean('enableStickyHeaderShadow', initialValues.enableStickyHeaderShadow, propsGroup)
+  const enableFreezeColumnShadow = boolean('enableFreezeColumnShadow', initialValues.enableFreezeColumnShadow, propsGroup)
 
   return {
     columnCount,
     rowCount,
     columns,
+    freezeToColumnIndex,
 
     data,
     maxHeight,
@@ -71,6 +78,7 @@ const defineProps = (overwriteValues) => {
     globalStickyHeader,
     localStickyHeader,
     enableStickyHeaderShadow,
+    enableFreezeColumnShadow,
   }
 }
 
@@ -279,6 +287,23 @@ storiesOf('Full Height|Sticky Header', module)
     enableStickyHeaderShadow: true,
   }))
 
+storiesOf('Full Height|Freeze Columns', module)
+  .addParameters({ info: { disable: true } })
+  .add('Freeze to column 0', () => createScenario({
+    freezeToColumnIndex: 0,
+  }))
+  .add('Freeze to column 3', () => createScenario({
+    freezeToColumnIndex: 3,
+  }))
+  .add('With shadow attached to column 0', () => createScenario({
+    freezeToColumnIndex: 0,
+    enableFreezeColumnShadow: true,
+  }))
+  .add('With shadow attached to column 3', () => createScenario({
+    freezeToColumnIndex: 3,
+    enableFreezeColumnShadow: true,
+  }))
+
 /*
 ##################
 ## Limit Height ##
@@ -336,4 +361,25 @@ storiesOf('Limit Height|Sticky Header', module)
     maxHeight: 500,
     localStickyHeader: true,
     enableStickyHeaderShadow: true,
+  }))
+
+storiesOf('Limit Height|Freeze Columns', module)
+  .addParameters({ info: { disable: true } })
+  .add('Freeze to column 0', () => createScenario({
+    maxHeight: 500,
+    freezeToColumnIndex: 0,
+  }))
+  .add('Freeze to column 3', () => createScenario({
+    maxHeight: 500,
+    freezeToColumnIndex: 3,
+  }))
+  .add('With shadow attached to column 0', () => createScenario({
+    maxHeight: 500,
+    freezeToColumnIndex: 0,
+    enableFreezeColumnShadow: true,
+  }))
+  .add('With shadow attached to column 3', () => createScenario({
+    maxHeight: 500,
+    freezeToColumnIndex: 3,
+    enableFreezeColumnShadow: true,
   }))
