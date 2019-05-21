@@ -1,3 +1,4 @@
+[![npm version](https://badge.fury.io/js/fucking-react-table.svg)](https://badge.fury.io/js/fucking-react-table)
 # Fucking React Table
 
 A react table component with fucking difficult features, including
@@ -16,27 +17,35 @@ for both fit-content height table and fixed height table.
 
 ## Why
 
-- Why native table element?
+- Why using native table element?
 
-  TBD.
+  Because it is fucking semantic and elegant.
 
 - Why reinventing the wheel?
 
-  TBD.
+  Considering sticky headers or freeze columns, I think reinventing is fucking more efficient than reusing.
+
+## Installation
+
+```
+npm install --save fucking-react-table
+```
 
 ## Quick Start
 
 ``` jsx
+import FuckTable from 'fucking-react-table'
+
 const data = [
   { id: 'a', value: 'Apple' },
   { id: 'b', value: 'Banana' },
 ]
-const Tr = DataTable.Tr
-const Th = DataTable.Th
-const Td = DataTable.Td
+const Tr = FuckTable.Tr
+const Th = FuckTable.Th
+const Td = FuckTable.Td
 
 return (
-  <DataTable
+  <FuckTable
     data={data}
     headerRowHeight={60}
     rowHeight={80}
@@ -56,35 +65,70 @@ return (
 )
 ```
 
+## Custom Styling
+
+``` jsx
+
+import FuckTable from 'fucking-react-table'
+import styled from 'styled-components'
+
+const Table = styled(FuckTable)`
+  background-color: #26282b;
+`
+
+const Tr = styled(FuckTable.Tr)`
+  background-color: rgb(53, 55, 58);
+`
+
+const Th = styled(FuckTable.Th)`
+  background-color: rgb(62, 63, 66);
+  color: rgb(156, 157, 158);
+`
+
+const Td = styled(FuckTable.Td)`
+  background-color: rgb(53, 55, 58);
+  color: #ffffff;
+`
+```
+
 ## Props
 
-### DataTable
+### FuckTable
 
-| prop name | required | description |
-| --------- | -------- | ----------- |
-| `data` | yes | data source |
-| `headerRowHeight` | yes | Fixed row height of table header. Table header is not virtualized and is always rendered. |
-| `rowHeight` | yes | fixed row height of table row |
-| `columnCount` | conditional | if your column count will change during runtime, you must pass current column count. This prop is only for detecting width changing and won't affect any other table behaviors. |
-| TBD |  |  |
+| prop name | type | required | default | description |
+| --------- | ---- | -------- | ------- | ----------- |
+| `data` | array | yes | - | Data source of table rows. Each row will be passed as argument into `renderRow`. |
+| `headerRowHeight` | number | yes | - | Fixed row height of table header. Table header is not virtualized and is always rendered. |
+| `rowHeight` | number | yes | - | Fixed row height of table row. |
+| `columnCount` | number | conditional | undefined | If your column count will change during runtime, you must pass current column count. This prop is only for detecting width changing and won't affect any other table behaviors. |
+| `maxHeight` | number | optional | -1 | Set a fixed max height value (in pixel). If `maxHeight` is negative (default to -1), the table will fit its height to contents. |
+| `throttleWait` | number | optional | 16 | Throttle wait interval in milliseconds for restoring virtualized table rows. Default to 16ms, which is about 60fps (1000ms / 60).
+| `preRenderRowCount` | number | optional | 0 | Set how many margin rows should be pre-render before they are displayed in viewport. |
+| `globalStickyHeader` | bool | optional | false | Toggle sticky header when global page scrolls |
+| `localStickyHeader` | bool | conditional | false | Required when `rowHeight` is set. Toggle sticky header when table container scrolls. |
+| `enableStickyHeaderShadow` | bool | optional | true | Toggle scroll shadow of sticky header. |
+| `enableFreezeColumnShadow` | bool | optional | true | Toggle scroll shadow of frozen column. |
+| `freezeColumnShadowLeftOffset` | number | conditional | null | Required when `enableFreezeColumnShadow` is `true`. This prop decides the x-axis position of shadow. |
+| `renderHeader` | func | optional | () => {} | A render function for table head section. |
+| `renderRow` | func | optional | () => {} | A render function for table body section. |
 
-### DataTable.Tr
+### FuckTable.Tr
 
-| prop name | required | description |
-| --------- | -------- | ----------- |
-| TBD |  |  |
+No props.
 
-### DataTable.Th
+### FuckTable.Th
 
-| prop name | required | description |
-| --------- | -------- | ----------- |
-| TBD |  |  |
+| prop name | type | required | default | description |
+| --------- | ---- | -------- | ------- | ----------- |
+| `cellWidth` | number | yes | - | Fixed value in px to decide the width of current `FuckTable.Th` |
+| `freezeLeftOffset` | number \| undefined | conditional | undefined | If you want to freeze columns, this prop sets the freeze left offset in px. You should set the same offset to `FuckTable.Td` for the same column. |
 
-### DataTable.Td
+### FuckTable.Td
 
-| prop name | required | description |
-| --------- | -------- | ----------- |
-| TBD |  |  |
+| prop name | type | required | default | description |
+| --------- | ---- | -------- | ------- | ----------- |
+| `cellWidth` | number | yes | - | Fixed value in px to decide the width of current `FuckTable.Td` |
+| `freezeLeftOffset` | number \| undefined | conditional | undefined | If you want to freeze columns, this prop sets the freeze left offset in px. You should set the same offset to `FuckTable.Th` for the same column. |
 
 ## Development
 
