@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react'
 import { number, boolean } from '@storybook/addon-knobs'
 import generateColumns from '../utils/generateColumns'
 import generateRows from '../utils/generateRows'
-import DataTable from '../lib'
+import FuckTable from '../lib'
 import DemoTable from './DemoTable'
 
 export const ContentBefore = () => (
@@ -129,12 +129,12 @@ storiesOf('Quick Start|Default', module)
         value: 'Banana',
       },
     ]
-    const Tr = DataTable.Tr
-    const Th = DataTable.Th
-    const Td = DataTable.Td
+    const Tr = FuckTable.Tr
+    const Th = FuckTable.Th
+    const Td = FuckTable.Td
 
     return (
-      <DataTable
+      <FuckTable
         data={data}
         headerRowHeight={60}
         rowHeight={80}
@@ -164,11 +164,11 @@ storiesOf('Quick Start|Default', module)
         value: 'Banana',
       },
     ]
-    const Tr = DataTable.Tr
-    const Td = DataTable.Td
+    const Tr = FuckTable.Tr
+    const Td = FuckTable.Td
 
     return (
-      <DataTable
+      <FuckTable
         data={data}
         headerRowHeight={0}
         rowHeight={80}
@@ -184,12 +184,12 @@ storiesOf('Quick Start|Default', module)
   .add('Big Table', () => {
     const columns = generateColumns(10)
     const data = generateRows(10000, columns)
-    const Tr = DataTable.Tr
-    const Th = DataTable.Th
-    const Td = DataTable.Td
+    const Tr = FuckTable.Tr
+    const Th = FuckTable.Th
+    const Td = FuckTable.Td
 
     return (
-      <DataTable
+      <FuckTable
         data={data}
         headerRowHeight={60}
         rowHeight={80}
@@ -223,11 +223,11 @@ storiesOf('Quick Start|Default', module)
   .add('Big Table without Header', () => {
     const columns = generateColumns(10)
     const data = generateRows(10000, columns)
-    const Tr = DataTable.Tr
-    const Td = DataTable.Td
+    const Tr = FuckTable.Tr
+    const Td = FuckTable.Td
 
     return (
-      <DataTable
+      <FuckTable
         data={data}
         headerRowHeight={0}
         rowHeight={80}
@@ -254,7 +254,7 @@ storiesOf('Quick Start|Default', module)
 */
 
 storiesOf('Full Height|Virtualized Rows/Throttle Render Frequency', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -269,7 +269,7 @@ storiesOf('Full Height|Virtualized Rows/Throttle Render Frequency', module)
   }))
 
 storiesOf('Full Height|Virtualized Rows/Pre-render Rows', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -284,7 +284,7 @@ storiesOf('Full Height|Virtualized Rows/Pre-render Rows', module)
   }), negativePreRenderInfo)
 
 storiesOf('Full Height|Sticky Header', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -293,7 +293,7 @@ storiesOf('Full Height|Sticky Header', module)
   }))
 
 storiesOf('Full Height|Sticky Header', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -303,7 +303,7 @@ storiesOf('Full Height|Sticky Header', module)
   }))
 
 storiesOf('Full Height|Freeze Columns', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -323,7 +323,7 @@ storiesOf('Full Height|Freeze Columns', module)
   }))
 
 storiesOf('Full Height|Sticky Header & Freeze Columns', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -341,7 +341,7 @@ storiesOf('Full Height|Sticky Header & Freeze Columns', module)
 */
 
 storiesOf('Limit Height|Virtualized Rows/Throttle Render Frequency', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -359,7 +359,7 @@ storiesOf('Limit Height|Virtualized Rows/Throttle Render Frequency', module)
   }))
 
 storiesOf('Limit Height|Virtualized Rows/Pre-render Rows', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -377,7 +377,7 @@ storiesOf('Limit Height|Virtualized Rows/Pre-render Rows', module)
   }), negativePreRenderInfo)
 
 storiesOf('Limit Height|Sticky Header', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -387,7 +387,7 @@ storiesOf('Limit Height|Sticky Header', module)
   }))
 
 storiesOf('Limit Height|Sticky Header', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -398,7 +398,7 @@ storiesOf('Limit Height|Sticky Header', module)
   }))
 
 storiesOf('Limit Height|Sticky Header', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -409,7 +409,7 @@ storiesOf('Limit Height|Sticky Header', module)
   }))
 
 storiesOf('Limit Height|Freeze Columns', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })
@@ -433,7 +433,7 @@ storiesOf('Limit Height|Freeze Columns', module)
   }))
 
 storiesOf('Limit Height|Sticky Header & Freeze Columns', module)
-    .addParameters({
+  .addParameters({
     options: { panelPosition: 'right' },
     info: { disable: true },
   })

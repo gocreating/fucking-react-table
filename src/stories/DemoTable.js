@@ -1,21 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
-import DataTable from '../lib'
+import FuckTable from '../lib'
 
-const Table = styled(DataTable)`
+const Table = styled(FuckTable)`
   background-color: #26282b;
 `
 
-const Tr = styled(DataTable.Tr)`
+const Tr = styled(FuckTable.Tr)`
   background-color: rgb(53, 55, 58);
 `
 
-const Th = styled(DataTable.Th)`
+const Th = styled(FuckTable.Th)`
   background-color: rgb(62, 63, 66);
   color: rgb(156, 157, 158);
 `
 
-const Td = styled(DataTable.Td)`
+const Td = styled(FuckTable.Td)`
   background-color: rgb(53, 55, 58);
   color: #ffffff;
 `
