@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import DataTable from '../components/DataTable'
+import DataTable from '../lib'
 
 const Table = styled(DataTable)`
   background-color: #26282b;

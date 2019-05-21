@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react'
 import { number, boolean } from '@storybook/addon-knobs'
 import generateColumns from '../utils/generateColumns'
 import generateRows from '../utils/generateRows'
-import DataTable from '../components/DataTable'
+import DataTable from '../lib'
 import DemoTable from './DemoTable'
 
 export const ContentBefore = () => (
@@ -114,7 +114,10 @@ const negativePreRenderInfo = {
 */
 
 storiesOf('Quick Start|Default', module)
-  .addParameters({ info: { disable: true } })
+  .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Small Table', () => {
     const data = [
       {
@@ -251,7 +254,10 @@ storiesOf('Quick Start|Default', module)
 */
 
 storiesOf('Full Height|Virtualized Rows/Throttle Render Frequency', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Default (16ms)', () => createScenario({
     throttleWait: 16,
   }))
@@ -263,7 +269,10 @@ storiesOf('Full Height|Virtualized Rows/Throttle Render Frequency', module)
   }))
 
 storiesOf('Full Height|Virtualized Rows/Pre-render Rows', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Default (0)', () => createScenario({
     preRenderRowCount: 0,
   }))
@@ -275,20 +284,29 @@ storiesOf('Full Height|Virtualized Rows/Pre-render Rows', module)
   }), negativePreRenderInfo)
 
 storiesOf('Full Height|Sticky Header', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Basic (Global Sticky)', () => createScenario({
     globalStickyHeader: true,
   }))
 
 storiesOf('Full Height|Sticky Header', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('With Shadow', () => createScenario({
     globalStickyHeader: true,
     enableStickyHeaderShadow: true,
   }))
 
 storiesOf('Full Height|Freeze Columns', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Freeze to column 0', () => createScenario({
     freezeToColumnIndex: 0,
   }))
@@ -305,7 +323,10 @@ storiesOf('Full Height|Freeze Columns', module)
   }))
 
 storiesOf('Full Height|Sticky Header & Freeze Columns', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Demo', () => createScenario({
     globalStickyHeader: true,
     enableStickyHeaderShadow: true,
@@ -320,7 +341,10 @@ storiesOf('Full Height|Sticky Header & Freeze Columns', module)
 */
 
 storiesOf('Limit Height|Virtualized Rows/Throttle Render Frequency', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Default (16ms)', () => createScenario({
     maxHeight: 500,
     throttleWait: 16,
@@ -335,7 +359,10 @@ storiesOf('Limit Height|Virtualized Rows/Throttle Render Frequency', module)
   }))
 
 storiesOf('Limit Height|Virtualized Rows/Pre-render Rows', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Default (0)', () => createScenario({
     maxHeight: 500,
     preRenderRowCount: 0,
@@ -350,14 +377,20 @@ storiesOf('Limit Height|Virtualized Rows/Pre-render Rows', module)
   }), negativePreRenderInfo)
 
 storiesOf('Limit Height|Sticky Header', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Basic (Local Sticky Only)', () => createScenario({
     maxHeight: 500,
     localStickyHeader: true,
   }))
 
 storiesOf('Limit Height|Sticky Header', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Local Sticky & Global Sticky', () => createScenario({
     maxHeight: 500,
     localStickyHeader: true,
@@ -365,7 +398,10 @@ storiesOf('Limit Height|Sticky Header', module)
   }))
 
 storiesOf('Limit Height|Sticky Header', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('With Shadow', () => createScenario({
     maxHeight: 500,
     localStickyHeader: true,
@@ -373,7 +409,10 @@ storiesOf('Limit Height|Sticky Header', module)
   }))
 
 storiesOf('Limit Height|Freeze Columns', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Freeze to column 0', () => createScenario({
     maxHeight: 500,
     freezeToColumnIndex: 0,
@@ -394,7 +433,10 @@ storiesOf('Limit Height|Freeze Columns', module)
   }))
 
 storiesOf('Limit Height|Sticky Header & Freeze Columns', module)
-  .addParameters({ info: { disable: true } })
+    .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
   .add('Demo', () => createScenario({
     maxHeight: 500,
     localStickyHeader: true,
