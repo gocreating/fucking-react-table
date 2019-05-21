@@ -55,7 +55,7 @@ const defineProps = (overwriteValues) => {
     'Freeze To Column Index', initialValues.freezeToColumnIndex, {}, demoTableGroup
   )
 
-  // react-virtual-table props
+  // fucking-react-table props
   const data = generateRows(rowCount, columns)
   const maxHeight = number('maxHeight', initialValues.maxHeight, {}, propsGroup)
   const throttleWait = number('throttleWait', initialValues.throttleWait, {}, propsGroup)

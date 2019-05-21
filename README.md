@@ -1,10 +1,18 @@
-# React Virtual Table
+# Fucking React Table
 
-A virtualized table structured with native table elements.
+A react table component with fucking difficult features, including
+
+- Virtualized rows with fucking native table elements
+- Sticky header
+- Freeze column
+- ~~Sticky horizontal scrollbar~~(WIP)
+- ~~Resizable column~~(WIP)
+
+for both fit-content height table and fixed height table.
 
 ## Playground
 
-[![Storybook](https://cdn.jsdelivr.net/gh/storybooks/brand@master/badge/badge-storybook.svg)](https://gocreating.github.io/react-virtual-table)
+[![Storybook](https://cdn.jsdelivr.net/gh/storybooks/brand@master/badge/badge-storybook.svg)](https://gocreating.github.io/fucking-react-table)
 
 ## Why
 
