@@ -1,4 +1,7 @@
 [![npm version](https://badge.fury.io/js/fucking-react-table.svg)](https://badge.fury.io/js/fucking-react-table)
+
+![](./demo/demo.gif)
+
 # Fucking React Table
 
 A react table component with fucking difficult features, including
@@ -24,6 +27,10 @@ for both fit-content height table and fixed height table.
 - Why reinventing the wheel?
 
   Considering sticky headers or freeze columns, I think reinventing is fucking more efficient than reusing.
+
+- Why the project is named `fucking-react-table`?
+
+  I originally named it `react-virtual-table`, but this name was fucking registered. The package even seems like a fucking useless hello world project. So I just give a fucking name.
 
 ## Installation
 
