@@ -157,3 +157,17 @@ Deploy to gh-pages
 ```
 yarn deploy-storybook
 ```
+
+## Changelog
+
+### `0.1.1`
+
+Reduce bundle size by removing unnecessary dependencies
+
+### `0.1.0`
+
+Initial release with following features:
+
+- virtualized rows
+- sticky header
+- freeze column
