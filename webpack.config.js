@@ -1,10 +1,13 @@
 const path = require('path');
+const PeerDepsExternalsPlugin = require('peer-deps-externals-webpack-plugin');
 
 module.exports = {
+  mode: 'production',
   entry: './src/lib/index.js',
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'dist')
+    path: path.resolve(__dirname, 'dist'),
+    libraryTarget: 'umd',
   },
   module: {
     rules: [
@@ -22,8 +25,11 @@ module.exports = {
               '@babel/plugin-proposal-class-properties',
             ],
           }
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  },
+  plugins: [
+    new PeerDepsExternalsPlugin(),
+  ],
 };
