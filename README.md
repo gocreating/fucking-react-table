@@ -17,7 +17,7 @@ for both fit-content height table and fixed height table.
 
 ## Playground
 
-[![Storybook](https://cdn.jsdelivr.net/gh/storybooks/brand@master/badge/badge-storybook.svg)](https://gocreating.github.io/fucking-react-table)
+[![Storybook](https://cdn.jsdelivr.net/gh/storybooks/brand@master/badge/badge-storybook.svg)](https://gocreating.github.io/fucking-react-table/?path=/story/quick-start-default--small-table)
 
 ## Why
 
