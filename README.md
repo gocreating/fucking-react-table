@@ -9,6 +9,7 @@ A react table component with fucking difficult features, including
 - Virtualized rows with fucking native table elements
 - Sticky header
 - Freeze column
+- ~~Placeholder~~(WIP)
 - ~~Sticky horizontal scrollbar~~(WIP)
 - ~~Resizable column~~(WIP)
 
