@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { storiesOf } from '@storybook/react'
 import { number, boolean } from '@storybook/addon-knobs'
 import generateColumns from '../utils/generateColumns'
@@ -245,6 +246,102 @@ storiesOf('Quick Start|Default', module)
         )}
       />
     )
+  })
+
+const columns_10 = generateColumns(10)
+const data_100 = generateRows(100, columns_10)
+const createThemedScenario = (Table, Tr, Th, Td) => {
+  return (
+    <Table
+      data={data_100}
+      headerRowHeight={60}
+      rowHeight={80}
+      renderHeader={() => (
+        <Tr>
+          {columns_10.map(column => (
+            <Th
+              key={column.id}
+              cellWidth={column.width}
+            >
+              {column.content}
+            </Th>
+          ))}
+        </Tr>
+      )}
+      renderRow={row => (
+        <Tr key={row.id}>
+          {columns_10.map(column => (
+            <Td
+              key={`row-${row}.id}-col-${column.id}`}
+              cellWidth={column.width}
+            >
+              {row[column.id]}
+            </Td>
+          ))}
+        </Tr>
+      )}
+    />
+  )
+}
+
+storiesOf('Quick Start|Custom Theme', module)
+  .addParameters({
+    options: { panelPosition: 'right' },
+    info: { disable: true },
+  })
+  .add('Dark', () => {
+    const Table = styled(FuckTable)`
+      background-color: #26282b;
+    `
+    const Tr = styled(FuckTable.Tr)`
+      background-color: rgb(53, 55, 58);
+    `
+    const Th = styled(FuckTable.Th)`
+      background-color: rgb(62, 63, 66);
+      color: rgb(156, 157, 158);
+    `
+    const Td = styled(FuckTable.Td)`
+      background-color: rgb(53, 55, 58);
+      color: #ffffff;
+    `
+    return createThemedScenario(Table, Tr, Th, Td)
+  })
+  .add('Stripped', () => {
+    const Table = styled(FuckTable)`
+    `
+    const Tr = styled(FuckTable.Tr)`
+      &:nth-of-type(even) td {
+        background-color: #ddd;
+      }
+      &:nth-of-type(odd) td {
+        background-color: #eee;
+      }
+    `
+    const Th = styled(FuckTable.Th)`
+      background-color: #555;
+      color: #fff;
+    `
+    const Td = styled(FuckTable.Td)`
+    `
+    return createThemedScenario(Table, Tr, Th, Td)
+  })
+  .add('Bordered', () => {
+    const Table = styled(FuckTable)`
+      background-color: #efefef;
+    `
+    const Tr = styled(FuckTable.Tr)`
+    `
+    const Th = styled(FuckTable.Th)`
+      border: 5px solid #bbb;
+      padding: 10px;
+      text-align: center;
+    `
+    const Td = styled(FuckTable.Td)`
+      border: 5px solid #bbb;
+      padding: 10px;
+      text-align: center;
+    `
+    return createThemedScenario(Table, Tr, Th, Td)
   })
 
 /*
