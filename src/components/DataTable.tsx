@@ -2,6 +2,16 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import throttle from 'lodash/throttle'
 import styled, { css } from 'styled-components'
+import {
+  TableProp,
+  TableState,
+  ScrollerProp,
+  TrProp,
+  StyledThProp,
+  ThProp,
+  StyledTdProp,
+  TdProp,
+} from './DataTable.d';
 
 /**
  * Wrapper
@@ -17,7 +27,7 @@ const Wrapper = styled.div`
 /**
  * Scroller
  */
-const Scroller = styled.div`
+const Scroller: any = styled.div<ScrollerProp>`
   overflow-x: auto;
   overflow-y: visible;
   max-width: 100%;
@@ -59,7 +69,7 @@ const TBody = styled.tbody`
 /**
  * Tr
  */
-const Tr = styled.tr`
+const Tr: any = styled.tr<TrProp>`
   overflow: hidden;
   z-index: 999;
   ${({ width }) => width && css`
@@ -78,6 +88,7 @@ const Tr = styled.tr`
         top: 0px;
       `
     }
+    return ''
   }}
   ${({ bottomShadow }) => bottomShadow && css`
     box-shadow: 0 15px 15px -15px rgba(0, 0, 0, 1);
@@ -100,7 +111,7 @@ Tr.defaultProps = {
 /**
  * StyledTh
  */
-const StyledTh = styled.th`
+const StyledTh: any = styled.th<StyledThProp>`
   text-align: left;
   white-space: nowrap;
   ${({ cellWidth }) => css`
@@ -115,13 +126,14 @@ const StyledTh = styled.th`
 `
 
 StyledTh.propTypes = {
+  cellWidth: PropTypes.number.isRequired,
   height: PropTypes.number,
 }
 
 /**
  * Th
  */
-const Th = (props, { headerRowHeight }) => (
+const Th: React.SFC<ThProp> = (props, { headerRowHeight }) => (
   <StyledTh height={headerRowHeight} {...props}  />
 )
 
@@ -132,7 +144,7 @@ Th.contextTypes = {
 /**
  * StyledTd
  */
-const StyledTd = styled.td`
+const StyledTd: any = styled.td<StyledTdProp>`
   text-align: left;
   white-space: nowrap;
   ${({ cellWidth }) => css`
@@ -153,7 +165,7 @@ StyledTd.propTypes = {
 /**
  * Td
  */
-const Td = (props, { rowHeight }) => (
+const Td: React.SFC<TdProp> = (props, { rowHeight }) => (
   <StyledTd height={rowHeight} {...props}  />
 )
 
@@ -182,8 +194,59 @@ const ClearFloat = styled.div`
 /**
  * DataTable
  */
-class DataTable extends Component {
-  constructor(props) {
+class DataTable<Entry> extends Component<TableProp<Entry>, TableState> {
+  /**
+   * Exposed Components
+   */
+  static THead = THead
+  static TBody = TBody
+  static Tr = Tr
+  static Th = Th
+  static Td = Td
+
+  static propTypes = {
+    data: PropTypes.array.isRequired,
+    headerRowHeight: PropTypes.number.isRequired,
+    rowHeight: PropTypes.number.isRequired,
+    columnCount: PropTypes.number,
+    maxHeight: PropTypes.number,
+    throttleWait: PropTypes.number,
+    preRenderRowCount: PropTypes.number,
+    globalStickyHeader: PropTypes.bool,
+    localStickyHeader: PropTypes.bool,
+    enableStickyHeaderShadow: PropTypes.bool,
+    enableFreezeColumnShadow: PropTypes.bool,
+    freezeColumnShadowLeftOffset: PropTypes.number,
+    renderHeader: PropTypes.func,
+    renderRow: PropTypes.func,
+  }
+
+  static childContextTypes = {
+    headerRowHeight: PropTypes.number,
+    rowHeight: PropTypes.number,
+  }
+
+  static defaultProps = {
+    maxHeight: -1,
+    throttleWait: 16,
+    preRenderRowCount: 0,
+    globalStickyHeader: false,
+    localStickyHeader: false,
+    enableStickyHeaderShadow: true,
+    enableFreezeColumnShadow: true,
+    freezeColumnShadowLeftOffset: null,
+    renderHeader: () => {},
+    renderRow: () => {},
+  }
+
+  private scroller: React.RefObject<HTMLDivElement>
+  private styledTable: React.RefObject<HTMLTableElement>
+  private tHeadTr: React.RefObject<HTMLElement>
+  private throttledHandleWindowResize: () => void
+  private throttledHandleWindowScroll: () => void
+  private throttledHandleScrollerScroll: () => void
+
+  constructor(props: TableProp<Entry>) {
     super(props)
     this.scroller = React.createRef()
     this.styledTable = React.createRef()
@@ -212,7 +275,7 @@ class DataTable extends Component {
     this.handleWindowResize()
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps: TableProp<Entry>, prevState: TableState) {
     const { columnCount, globalStickyHeader, maxHeight, throttleWait } = this.props
     const { isGlobalHeaderSticky } = this.state
     const prevColumnCount = prevProps.columnCount
@@ -243,12 +306,15 @@ class DataTable extends Component {
     this.removeListeners()
   }
 
-  isAutoHeight = (props) => {
+  isAutoHeight = (props?: TableProp<Entry>) => {
     const { maxHeight } = (props || this.props)
     return maxHeight < 0
   }
 
   addListeners = () => {
+    if (!this.scroller.current) {
+      return
+    }
     const { throttleWait } = this.props
     this.throttledHandleWindowResize = throttle(this.handleWindowResize, throttleWait)
     this.throttledHandleWindowScroll = throttle(this.handleWindowScroll, throttleWait)
@@ -262,6 +328,9 @@ class DataTable extends Component {
   }
 
   removeListeners = () => {
+    if (!this.scroller.current) {
+      return
+    }
     window.removeEventListener('resize', this.throttledHandleWindowResize)
     if (this.isAutoHeight()) {
       window.removeEventListener('scroll', this.throttledHandleWindowScroll)
@@ -271,6 +340,9 @@ class DataTable extends Component {
   }
 
   handleWindowResize = () => {
+    if (!this.scroller.current) {
+      return
+    }
     const scrollerClientWidth = this.scroller.current.clientWidth
     const scrollerClientHeight = this.scroller.current.clientHeight
     let scrollerHeight
@@ -287,7 +359,7 @@ class DataTable extends Component {
     })
   }
 
-  getRenderIndexRange = (tbodyTopY, tbodyBottomY) => {
+  getRenderIndexRange = (tbodyTopY: number, tbodyBottomY: number) => {
     const { rowHeight, data } = this.props
     const { scrollerHeight } = this.state
     let renderFromIndex
@@ -311,6 +383,9 @@ class DataTable extends Component {
   }
 
   handleWindowScroll = () => {
+    if (!this.scroller.current) {
+      return
+    }
     const { preRenderRowCount, headerRowHeight, rowHeight, data } = this.props
     const rectScroller = this.scroller.current.getBoundingClientRect()
     let newState = {}
@@ -343,6 +418,9 @@ class DataTable extends Component {
   }
 
   handleScrollerScroll = () => {
+    if (!this.scroller.current) {
+      return
+    }
     const {
       preRenderRowCount,
       headerRowHeight,
@@ -385,6 +463,9 @@ class DataTable extends Component {
   }
 
   syncStickyHeaderScrollLeft = () => {
+    if (!this.tHeadTr.current || !this.scroller.current) {
+      return
+    }
     this.tHeadTr.current.scrollLeft = this.scroller.current.scrollLeft
   }
 
@@ -435,7 +516,7 @@ class DataTable extends Component {
                   <ShadowedTd
                     rowSpan="0"
                     freezeLeftOffset={freezeColumnShadowLeftOffset}
-                    height={this.isAutoHeight() ? (this.styledTable.current || {}).clientHeight : scrollerHeight}
+                    height={this.isAutoHeight() ? (this.styledTable.current || {} as any).clientHeight : scrollerHeight}
                   />
                 </Tr>
               )}
@@ -491,49 +572,5 @@ class DataTable extends Component {
     )
   }
 }
-
-DataTable.propTypes = {
-  data: PropTypes.array.isRequired,
-  headerRowHeight: PropTypes.number.isRequired,
-  rowHeight: PropTypes.number.isRequired,
-  columnCount: PropTypes.number,
-  maxHeight: PropTypes.number,
-  throttleWait: PropTypes.number,
-  preRenderRowCount: PropTypes.number,
-  globalStickyHeader: PropTypes.bool,
-  localStickyHeader: PropTypes.bool,
-  enableStickyHeaderShadow: PropTypes.bool,
-  enableFreezeColumnShadow: PropTypes.bool,
-  freezeColumnShadowLeftOffset: PropTypes.number,
-  renderHeader: PropTypes.func,
-  renderRow: PropTypes.func,
-}
-
-DataTable.childContextTypes = {
-  headerRowHeight: PropTypes.number,
-  rowHeight: PropTypes.number,
-}
-
-DataTable.defaultProps = {
-  maxHeight: -1,
-  throttleWait: 16,
-  preRenderRowCount: 0,
-  globalStickyHeader: false,
-  localStickyHeader: false,
-  enableStickyHeaderShadow: true,
-  enableFreezeColumnShadow: true,
-  freezeColumnShadowLeftOffset: null,
-  renderHeader: () => {},
-  renderRow: () => {},
-}
-
-/**
- * Exposed Components
- */
-DataTable.THead = THead
-DataTable.TBody = TBody
-DataTable.Tr = Tr
-DataTable.Th = Th
-DataTable.Td = Td
 
 export default DataTable

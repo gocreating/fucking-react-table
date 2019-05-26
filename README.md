@@ -101,7 +101,7 @@ const Td = styled(FuckTable.Td)`
 
 ## Props
 
-### FuckTable
+### `FuckTable`
 
 | prop name | type | required | default | description |
 | --------- | ---- | -------- | ------- | ----------- |
@@ -120,18 +120,18 @@ const Td = styled(FuckTable.Td)`
 | `renderHeader` | func | optional | () => {} | A render function for table head section. |
 | `renderRow` | func | optional | () => {} | A render function for table body section. |
 
-### FuckTable.Tr
+### `FuckTable.Tr`
 
 No props.
 
-### FuckTable.Th
+### `FuckTable.Th`
 
 | prop name | type | required | default | description |
 | --------- | ---- | -------- | ------- | ----------- |
 | `cellWidth` | number | yes | - | Fixed value in px to decide the width of current `FuckTable.Th` |
 | `freezeLeftOffset` | number \| undefined | conditional | undefined | If you want to freeze columns, this prop sets the freeze left offset in px. You should set the same offset to `FuckTable.Td` for the same column. |
 
-### FuckTable.Td
+### `FuckTable.Td`
 
 | prop name | type | required | default | description |
 | --------- | ---- | -------- | ------- | ----------- |

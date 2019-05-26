@@ -306,6 +306,7 @@ storiesOf('Quick Start|Custom Theme', module)
     `
     return createThemedScenario(Table, Tr, Th, Td)
   })
+  // FIXME: css nth selector is not suitable for virtualized rows
   .add('Stripped', () => {
     const Table = styled(FuckTable)`
     `
